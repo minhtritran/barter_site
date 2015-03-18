@@ -6,7 +6,7 @@ from .models import User, Feedback, Favor, Offer, Agreement
 class UserAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['username', 'first_name', 'last_name', 'password',
-         'email', 'DOB', 'is_active', 'groups']}),
+         'email', 'gender', 'DOB', 'is_active', 'groups']}),
         ('Date information', {'fields': ['date_joined', 'last_login'], 'classes': ['collapse']}),
         ('Permissions and User Level', {'fields': ['is_staff', 'user_permissions'], 'classes': ['collapse']}),
     ]

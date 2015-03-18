@@ -6,7 +6,13 @@ from django.utils import timezone
 
 # Create your models here.
 class User(django.contrib.auth.models.User):
+    gender_choices = (
+        ('m', 'Male'),
+        ('f', 'Female'),
+        ('o', 'Other'),
+    )
     DOB = models.DateField('Date of Birth')
+    gender = models.CharField(max_length=1, choices=gender_choices, default='m')
 
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'email']
 
@@ -16,13 +22,20 @@ class User(django.contrib.auth.models.User):
     def get_favors_completed(self):
         return Favor.objects.filter(status='complete', completed_by=self.id)
 
+    def rating(self):
+        r = 0
+        fb = self.get_feedback()
+        for num in fb:
+            r += num.rating
+        return '{0:.2g}'.format(r/fb.__len__())
+
     def __str__(self):
         return self.username + ' (' + self.last_name + ', ' + self.first_name + ')'
 
 
 class Post(models.Model):
     last_edit = models.DateTimeField('Last Edit', null=True)
-    pub_date = models.DateTimeField('Date Published', null=True)
+    pub_date = models.DateTimeField('Date Published', null=True, default=datetime.datetime.now())
     message = models.CharField(max_length=200, default='')
 
     def edit(self, m):
@@ -46,7 +59,7 @@ class Feedback(Post):
 class Favor(Post):
     title = models.CharField(max_length=32, default='')
     author = models.ForeignKey(User, related_name='Author')
-    completed_by = models.ForeignKey(User, related_name='Completed by', default=None)
+    completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
     categories = models.CommaSeparatedIntegerField(max_length=16)
     allow_offers = models.BooleanField(default=False)
     status = models.CharField(max_length=16, default='open')

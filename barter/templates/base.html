@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 
+{% load bootstrap3 %}
 {% load staticfiles %}
+
 
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% bootstrap_css_url %}">
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -34,14 +36,15 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
+                {% bootstrap_messages %}
                 {% block content %}
                 {% endblock %}
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% bootstrap_jquery_url %}"></script>
+    <script src="{% bootstrap_javascript_url %}"></script>
     <script>
         $('.dropdown-toggle').dropdown()
     </script>
