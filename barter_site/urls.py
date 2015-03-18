@@ -3,7 +3,8 @@ from django.contrib import admin
 
 urlpatterns = patterns(
     '',
-    url(r'^', include('django.contrib.auth.urls')),
+    url('^login/', 'django.contrib.auth.views.login'),
+    url('^logout/', 'django.contrib.auth.views.logout'),
     url(r'^', include('barter.urls', namespace='barter')),
     url(r'^admin/', include(admin.site.urls)),
 )
