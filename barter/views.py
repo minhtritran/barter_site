@@ -1,25 +1,23 @@
-<<<<<<< HEAD
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.views import generic
 from .models import User, Feedback, Favor, Offer, Agreement
-
-=======
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from barter.forms import UserCreateForm
->>>>>>> d5709cc11f7549f7c988edb39ef8359880da23cc
+
 
 # Create your views here.
 @login_required
 def home(request):
     return render(request, 'barter/index.html', {})
 
-<<<<<<< HEAD
 
 def user(request):
     return render(request, 'barter/user.html', {"foo": "bar"})
+
+
+def register(request):
+    form = UserCreateForm()
+    return render(request, 'registration/register.html', {"form": form})
 
 
 def post_feedback(request, user_id):
@@ -55,7 +53,7 @@ def post_offer(request, favor_id):
     try:
         m = request.POST['message']
     except (KeyError, Feedback.DoesNotExist):
-        return render(request, 'barter/favor.html', {
+        return render(request, 'barter/offer.html', {
             'error_message': 'Some fields are empty.'
         })
     else:
@@ -70,17 +68,11 @@ def agreement(request, favor_id, user_id):
         m = request.POST['message']
         c = request.POST['categories']
     except (KeyError, Feedback.DoesNotExist):
-        return render(request, 'barter/favor.html', {
+        return render(request, 'barter/agreement.html', {
             'error_message': 'Some fields are empty.'
         })
     else:
         ag = Offer(message=m, favor=f.id, sender=request.user, receiver=u.id)
         ag.save()
-=======
-def user(request):
-    return render(request, 'barter/user.html', {"foo": "bar"})
 
-def register(request):
-    form = UserCreateForm()
-    return render(request, 'registration/register.html', {"form": form})
->>>>>>> d5709cc11f7549f7c988edb39ef8359880da23cc
+
