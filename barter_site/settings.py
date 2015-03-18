@@ -96,3 +96,6 @@ STATICFILES_DIRS = (
         'static',
     ),
 )
+
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
