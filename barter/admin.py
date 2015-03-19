@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Feedback, Favor
+from .models import User, Feedback, Favor, Offer, Agreement
 
 from django import forms
 from django.contrib.auth.models import Group
@@ -83,11 +83,31 @@ class UserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-# Now register the new UserAdmin...
-admin.site.register(User, UserAdmin)
-# ... and, since we're not using Django's built-in permissions,
-# unregister the Group model from admin.
-admin.site.unregister(Group)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver', 'rating', 'pub_date', 'id')
+    search_fields = ['sender', 'receiver']
+    list_filter = ['pub_date', 'last_edit']
 
-admin.site.register(Feedback)
-admin.site.register(Favor)
+
+class FavorAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'completed_by', 'pub_date', 'status', 'categories', 'id')
+    search_fields = ['sender', 'receiver']
+    list_filter = ['pub_date', 'last_edit']
+
+
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'favor', 'pub_date', 'last_edit', 'id')
+    search_fields = ['sender', 'favor']
+    list_filter = ['pub_date', 'last_edit']
+
+
+class AgreementAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'favor', 'receiver', 'status', 'id')
+    search_fields = ['sender', 'receiver']
+
+admin.site.unregister(Group)
+admin.site.register(User, UserAdmin)
+admin.site.register(Feedback, FeedbackAdmin)
+admin.site.register(Favor, FavorAdmin)
+admin.site.register(Offer, OfferAdmin)
+admin.site.register(Agreement, AgreementAdmin)

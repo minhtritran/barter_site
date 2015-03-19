@@ -53,6 +53,13 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
+    gender_choices = (
+        ('m', 'Male'),
+        ('f', 'Female'),
+        ('o', 'Other'),
+    )
+    gender = models.CharField(max_length=1, choices=gender_choices, default='m')
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -92,32 +99,66 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+    def rating(self):
+        r = 0
+        fb = self.get_feedback()
+        for num in fb:
+            r += num.rating
+        return '{0:.2g}'.format(r/fb.__len__())
 
-class Feedback(models.Model):
-    last_edit = models.DateTimeField('Last Edit')
-    pub_date = models.DateTimeField('date published')
-    message = models.CharField(max_length=200)
-    sender = models.ForeignKey(User, related_name='Sender')
-    receiver = models.ForeignKey(User, related_name='Receiver')
+    def __str__(self):
+        return self.username + ' (' + self.last_name + ', ' + self.first_name + ')'
+
+
+class Post(models.Model):
+    last_edit = models.DateTimeField('Last Edit', null=True)
+    pub_date = models.DateTimeField('Date Published', null=True, default=datetime.datetime.now())
+    message = models.CharField(max_length=200, default='')
+
+    def edit(self, m):
+        self.message = m
+        last_edit = datetime.datetime.now()
+        return self
+
+    class Meta:
+        abstract = True
+
+
+class Feedback(Post):
+    sender = models.ForeignKey(User, related_name='Feedback Sender')
+    receiver = models.ForeignKey(User, related_name='Feedback Receiver')
     rating = models.IntegerField(default=0)
 
-    def edit(self, m):
-        self.message = m
-        return self
+    def __str__(self):
+        return self.sender.__str__() + ' ' + str(self.rating)
 
 
-class Favor(models.Model):
-    last_edit = models.DateTimeField('Last Edit')
-    pub_date = models.DateTimeField('date published')
-    message = models.CharField(max_length=200)
+class Favor(Post):
     title = models.CharField(max_length=32, default='')
     author = models.ForeignKey(User, related_name='Author')
-    completed_by = models.ForeignKey(User, related_name='Completed by', default=None)
+    completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
     categories = models.CommaSeparatedIntegerField(max_length=16)
     allow_offers = models.BooleanField(default=False)
-    status = models.CharField(max_length=16, default='')
+    status = models.CharField(max_length=16, default='open')
 
-    def edit(self, m):
-        self.message = m
-        return self
+    def __str__(self):
+        return '"' + self.title + '": ' + self.sender.__str__()
 
+
+class Offer(Post):
+    favor = models.ForeignKey(Favor, related_name='Offers Favor')
+    sender = models.ForeignKey(User)
+
+    def __str__(self):
+        return '"' + self.sender.__str__() + '"'
+
+
+class Agreement(models.Model):
+    sender = models.ForeignKey(User, related_name='Agreement Sender', null=True)
+    favor = models.ForeignKey(Favor, related_name='Agreement Favor', null=True)
+    receiver = models.ForeignKey(User, related_name='Agreement Receiver', null=True)
+    status = models.CharField(max_length=16, default='pending')
+    customOffer = models.ForeignKey(Offer, null=True)
+
+    def __str__(self):
+        return self.sender.__str__() + ' (' + self.status + ')'
