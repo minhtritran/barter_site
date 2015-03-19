@@ -137,7 +137,7 @@ class Favor(Post):
     status = models.CharField(max_length=16, default='open')
 
     def __str__(self):
-        return '"' + self.title + '": ' + self.sender.__str__()
+        return '"' + self.title + '": ' + self.author.__str__()
 
 
 class Offer(Post):

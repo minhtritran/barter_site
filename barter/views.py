@@ -1,8 +1,9 @@
+from django.contrib.auth.views import login
 from django.shortcuts import get_object_or_404, render
+from django.views.generic import DetailView, ListView
 from .models import User, Feedback, Favor, Offer, Agreement
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from barter.admin import UserCreationForm
 
 # Create your views here.
@@ -10,8 +11,18 @@ from barter.admin import UserCreationForm
 def home(request):
     return render(request, 'barter/index.html', {})
 
-def user(request):
-    return render(request, 'barter/user.html', {"foo": "bar"})
+class FavorList(ListView):
+    queryset = Favor.objects.all()
+    template_name = "barter/favor_list.html"
+    paginate_by = 10
+
+class FavorDetail(DetailView):
+    model = Favor
+    template_name = "barter/favor_detail.html"
+
+class UserDetail(DetailView):
+    model = User
+    template_name = "barter/user.html"
 
 def register(request):
     if request.method == 'POST':
@@ -77,3 +88,10 @@ def agreement(request, favor_id, user_id):
     else:
         ag = Offer(message=m, favor=f.id, sender=request.user, receiver=u.id)
         ag.save()
+
+
+def custom_login(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+    else:
+        return login(request)

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Favors{% endblock %}
+
+{% block content %}
+    <h1>List of Favors</h1>
+    <hr/>
+    {% for object in object_list %}
+        <a href="{{ object.pk }}" style="text-decoration: none">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3>{{ object.title }}</h3>
+                <p>{{ object.message }}</p>
+            </div>
+        </div>
+        </a>
+    {% endfor %}
+
+    {% if is_paginated %}
+        <div style="text-align:center">
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="/favors?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {%  endif %}
+                    <li><a>{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="/favors?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+{% endblock %}

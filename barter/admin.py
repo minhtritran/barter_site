@@ -91,7 +91,7 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 class FavorAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'completed_by', 'pub_date', 'status', 'categories', 'id')
-    search_fields = ['sender', 'receiver']
+    search_fields = ['author', 'complete_by']
     list_filter = ['pub_date', 'last_edit']
 
 
