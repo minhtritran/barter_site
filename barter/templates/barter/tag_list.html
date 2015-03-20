@@ -1,23 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Favors{% endblock %}
+{% block title %}Tags{% endblock %}
 
 {% block content %}
-    <h1>Favors</h1>
+    <h1>Tags</h1>
     <hr/>
-    {% for object in object_list %}
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h3><a href="{% url "barter:favor_list" %}{{ object.pk }}" style="text-decoration: none">{{ object.title }}</a></h3>
-                <p>{{ object.message }}</p>
-                <div>
-                    {% for tag in object.tags.all %}
-                        <span><a href="">{{ tag }}</a></span>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+     <ul class="list-unstyled">
+        {% for object in object_list %}
+
+           <li> <a href="../favors/tagged/{{ object.slug }}">{{ object.slug }}</a> <span class="badge">{{ object.favor_set.count }}</span></li>
+
+        {% endfor %}
+      </ul>
 
     {% if is_paginated %}
         <div class="text-center">
@@ -25,7 +19,7 @@
                 <ul class="pagination">
                     {% if page_obj.has_previous %}
                         <li>
-                            <a href="/favors?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <a href="/tags?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -33,7 +27,7 @@
                     <li><a>{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
                     {% if page_obj.has_next %}
                         <li>
-                            <a href="/favors?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <a href="/tags?page={{ page_obj.next_page_number }}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

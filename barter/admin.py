@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Feedback, Favor, Offer, Agreement
+from .models import User, Feedback, Favor, Offer, Agreement, Tag
 
 from django import forms
 from django.contrib.auth.models import Group
@@ -83,6 +83,10 @@ class UserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('slug',)
+    search_fields = ['slug']
+
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('sender', 'receiver', 'rating', 'pub_date', 'id')
     search_fields = ['sender', 'receiver']
@@ -90,7 +94,7 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 
 class FavorAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'completed_by', 'pub_date', 'status', 'categories', 'id')
+    list_display = ('title', 'author', 'completed_by', 'pub_date', 'status', 'id')
     search_fields = ['author', 'complete_by']
     list_filter = ['pub_date', 'last_edit']
 
@@ -106,6 +110,7 @@ class AgreementAdmin(admin.ModelAdmin):
     search_fields = ['sender', 'receiver']
 
 admin.site.unregister(Group)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Favor, FavorAdmin)

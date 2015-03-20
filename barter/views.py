@@ -1,7 +1,7 @@
 from django.contrib.auth.views import login
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
-from .models import User, Feedback, Favor, Offer, Agreement
+from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from barter.admin import UserCreationForm
@@ -19,6 +19,16 @@ class FavorList(ListView):
 class FavorDetail(DetailView):
     model = Favor
     template_name = "barter/favor_detail.html"
+
+class TagList(ListView):
+    queryset = Tag.objects.all()
+    template_name = "barter/tag_list.html"
+    paginate_by = 10
+
+class UserList(ListView):
+    queryset = User.objects.all()
+    template_name = "barter/user_list.html"
+    paginate_by = 10
 
 class UserDetail(DetailView):
     model = User

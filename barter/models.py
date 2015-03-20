@@ -104,6 +104,11 @@ class User(AbstractBaseUser):
             r += num.rating
         return '{0:.2g}'.format(r/fb.__len__())
 
+class Tag(models.Model):
+    slug = models.SlugField(max_length=40, unique=True)
+
+    def __str__(self):
+        return self.slug
 
 class Post(models.Model):
     last_edit = models.DateTimeField('Last Edit', null=True)
@@ -127,12 +132,11 @@ class Feedback(Post):
     def __str__(self):
         return self.sender.__str__() + ' ' + str(self.rating)
 
-
 class Favor(Post):
     title = models.CharField(max_length=32, default='')
     author = models.ForeignKey(User, related_name='Author')
     completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
-    categories = models.CommaSeparatedIntegerField(max_length=16)
+    tags = models.ManyToManyField(Tag)
     allow_offers = models.BooleanField(default=False)
     status = models.CharField(max_length=16, default='open')
 
@@ -157,3 +161,4 @@ class Agreement(models.Model):
 
     def __str__(self):
         return self.sender.__str__() + ' (' + self.status + ')'
+
