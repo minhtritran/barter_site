@@ -1,38 +1,60 @@
 from django.contrib.auth.views import login
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
-from .models import User, Feedback, Favor, Offer, Agreement, Tag
+from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from barter.admin import UserCreationForm
+from .models import User, Feedback, Favor, Offer, Agreement, Tag
+
 
 # Create your views here.
 @login_required
 def home(request):
     return render(request, 'barter/index.html', {})
 
+
 class FavorList(ListView):
     queryset = Favor.objects.all()
     template_name = "barter/favor_list.html"
     paginate_by = 10
 
+
 class FavorDetail(DetailView):
     model = Favor
     template_name = "barter/favor_detail.html"
+
+
+class FavorCreate(CreateView):
+    model = Favor
+    template_name = "barter/favor_form.html"
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(FavorCreate, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['author'] = self.request.user.pk
+        # etc...
+        return initial
+
 
 class TagList(ListView):
     queryset = Tag.objects.all()
     template_name = "barter/tag_list.html"
     paginate_by = 10
 
+
 class UserList(ListView):
     queryset = User.objects.all()
     template_name = "barter/user_list.html"
     paginate_by = 10
 
+
 class UserDetail(DetailView):
     model = User
     template_name = "barter/user.html"
+
 
 def register(request):
     if request.method == 'POST':

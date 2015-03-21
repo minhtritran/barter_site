@@ -7,7 +7,6 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 
-
 # Register your models here.
 
 
@@ -76,16 +75,17 @@ class UserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'date_of_birth', 'password1', 'password2')}
-        ),
+            'fields': ('email', 'date_of_birth', 'password1', 'password2')}),
     )
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
 
+
 class TagAdmin(admin.ModelAdmin):
     list_display = ('slug',)
     search_fields = ['slug']
+
 
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('sender', 'receiver', 'rating', 'pub_date', 'id')
