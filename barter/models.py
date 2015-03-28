@@ -1,14 +1,11 @@
-import datetime
-import django.contrib.auth.models
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-from django.utils import timezone
 
 
 # Create your models here.
-
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         """
@@ -112,12 +109,12 @@ class Tag(models.Model):
 
 class Post(models.Model):
     last_edit = models.DateTimeField('Last Edit', null=True)
-    pub_date = models.DateTimeField('Date Published', null=True, default=datetime.datetime.now())
-    message = models.CharField(max_length=200, default='')
+    pub_date = models.DateTimeField('Date Published', null=True, default=timezone.now())
+    message = models.TextField(max_length=500, default='')
 
     def edit(self, m):
         self.message = m
-        last_edit = datetime.datetime.now()
+        last_edit = timezone.now()
         return self
 
     class Meta:

@@ -1,17 +1,6 @@
-{% extends "base.html" %}
-
+{% extends "base_form.html" %}
 {% load bootstrap3 %}
 
 {% block title %}Favor Form{% endblock %}
-
-{% block content %}
-    <h1>Favor Form</h1>
-    <hr/>
-    <form method="post" action="{% url 'barter:favor_create' %}">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-
-        {% buttons submit='Post Favor' reset="Cancel" %}{% endbuttons %}
-        <input type="hidden" name="next" value="{{ next }}" />
-    </form>
-{% endblock %}
+{% block url %}'barter:favor_create'{% endblock %}
+{% block button %}{% buttons submit='Post Favor' reset="Cancel" %}{% endbuttons %}{% endblock %}
