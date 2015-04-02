@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'^favors/$', views.FavorList.as_view(), name='favor_list'),
     url(r'^favors/(?P<pk>\d+)/$', views.FavorDetail.as_view(), name='favor_detail'),
     url(r'^favors/create/$', views.FavorCreate.as_view(), name='favor_create'),
+    url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
     url(r'^tags/$', views.TagList.as_view(), name='tag_list'),
     url(r'^users/$', views.UserList.as_view(), name='user_list'),
     url(r'^users/(?P<pk>\d+)/$', views.UserDetail.as_view(), name='user_detail')

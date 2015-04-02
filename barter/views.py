@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from .forms import UserCreationForm, UserChangeForm, FavorForm
 
@@ -28,7 +28,7 @@ class FavorDetail(DetailView):
 class FavorCreate(CreateView):
     model = Favor
     template_name = "barter/favor_form.html"
-    form_class = FavorForm
+    # form_class = FavorForm
 
     def get_initial(self):
         # Get the initial dictionary from the superclass method
@@ -65,6 +65,16 @@ def register(request):
             return HttpResponseRedirect("/")
     form = UserCreationForm()
     return render(request, 'registration/register.html', {"form": form})
+
+
+def create_favor(request):
+    if request.method == 'POST':
+        form = FavorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/")
+    form = FavorForm()
+    return render(request, 'barter/favor_form.html', {"form": form})
 
 
 def custom_login(request):

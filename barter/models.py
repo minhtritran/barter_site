@@ -109,7 +109,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     last_edit = models.DateTimeField('Last Edit', null=True)
-    pub_date = models.DateTimeField('Date Published', null=True, default=timezone.now())
+    pub_date = models.DateTimeField('Date Published', null=True, blank=True, auto_now_add=True)
     message = models.TextField(max_length=500, default='')
 
     def edit(self, m):
@@ -132,7 +132,7 @@ class Feedback(Post):
 
 class Favor(Post):
     title = models.CharField(max_length=32, default='')
-    author = models.ForeignKey(User, related_name='Author')
+    author = models.ForeignKey(User, related_name='Author', default=)
     completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
     tags = models.ManyToManyField(Tag)
     allow_offers = models.BooleanField(default=False)
