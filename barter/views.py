@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.views import login
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
@@ -74,9 +75,18 @@ def create_favor(request):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
+            for tag in request.POST['tags'].split(','):
+                try:
+                    t = Tag.objects.get(slug=tag)
+                except Tag.DoesNotExist:
+                    t = Tag(slug=tag)
+                    t.save()
+                obj.tags.add(Tag.objects.get(slug=tag))
             form.save_m2m()
+            messages.success(request, 'Favor has been created.')
             return HttpResponseRedirect("/")
     form = FavorForm()
+    messages.error(request, 'The form is incomplete.')
     return render(request, 'barter/favor_form.html', {"form": form})
 
 
