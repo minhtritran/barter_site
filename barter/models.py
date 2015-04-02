@@ -132,7 +132,7 @@ class Feedback(Post):
 
 class Favor(Post):
     title = models.CharField(max_length=32, default='')
-    author = models.ForeignKey(User, related_name='Author', default=)
+    author = models.ForeignKey(User, related_name='Author')
     completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
     tags = models.ManyToManyField(Tag)
     allow_offers = models.BooleanField(default=False)

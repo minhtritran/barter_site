@@ -28,7 +28,7 @@ class FavorDetail(DetailView):
 class FavorCreate(CreateView):
     model = Favor
     template_name = "barter/favor_form.html"
-    # form_class = FavorForm
+    form_class = FavorForm
 
     def get_initial(self):
         # Get the initial dictionary from the superclass method
@@ -71,7 +71,10 @@ def create_favor(request):
     if request.method == 'POST':
         form = FavorForm(request.POST)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.author = request.user
+            obj.save()
+            form.save_m2m()
             return HttpResponseRedirect("/")
     form = FavorForm()
     return render(request, 'barter/favor_form.html', {"form": form})

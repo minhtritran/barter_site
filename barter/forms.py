@@ -49,6 +49,7 @@ class UserChangeForm(forms.ModelForm):
 
 
 class FavorForm(forms.ModelForm):
+    tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'At least one tag'}))
     class Meta:
         model = Favor
         fields = ['title', 'allow_offers', 'message']
@@ -58,5 +59,3 @@ class FavorForm(forms.ModelForm):
         if commit:
             favor.save()
         return favor
-
-
