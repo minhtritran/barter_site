@@ -13,6 +13,13 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
 
+    def clean_email(self):
+        #check if email is a .edu email
+        email_domain = self.cleaned_data['email'].split('.')[-1]
+        if email_domain != 'edu':
+            raise forms.ValidationError("You must register with a edu email address.")
+        return self.cleaned_data['email']
+
     def clean_password2(self):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
