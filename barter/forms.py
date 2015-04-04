@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.admin.widgets import AdminDateWidget
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 
 
@@ -13,7 +14,6 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
 
-    
     def clean(self):
         #run the standard clean method first
         cleaned_data=super(UserCreationForm, self).clean()
@@ -21,9 +21,7 @@ class UserCreationForm(forms.ModelForm):
         password2 = cleaned_data.get("password2")
 
         #check if passwords are entered and match
-        if password1 and password2 and password1==password2:
-            print "pwd ok"
-        else:
+        if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords do not match!")
 
         #always return the cleaned data
