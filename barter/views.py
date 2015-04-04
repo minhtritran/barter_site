@@ -16,9 +16,19 @@ def home(request):
 
 
 class FavorList(ListView):
-    queryset = Favor.objects.all()
     template_name = "barter/favor_list.html"
     paginate_by = 10
+
+    def get(self, request, *args, **kwargs):
+        slug = kwargs.get('slug')
+        slug_id = Tag.objects.filter(slug=slug)
+        if slug_id:
+            self.queryset = Favor.objects.filter(tags__pk=slug_id)
+        else:
+            self.queryset = Favor.objects.all()
+        if not self.queryset:
+            messages.warning(request, "No favors with this tag.")
+        return super(FavorList, self).get(request, *args, **kwargs)
 
 
 class FavorDetail(DetailView):

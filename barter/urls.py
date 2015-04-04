@@ -9,6 +9,7 @@ urlpatterns = patterns(
     url('^register/', views.register, name='register'),
     url(r'^$', views.home, name='home'),
     url(r'^favors/$', views.FavorList.as_view(), name='favor_list'),
+    url(r'^favors/tag/(?P<slug>[-\w\d]+)/$', views.FavorList.as_view(), name='favor_list_tagged'),
     url(r'^favors/(?P<pk>\d+)/$', views.FavorDetail.as_view(), name='favor_detail'),
     url(r'^favors/create/$', views.FavorCreate.as_view(), name='favor_create'),
     url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
