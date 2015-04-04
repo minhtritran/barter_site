@@ -64,7 +64,8 @@ def register(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect("/")
-    form = UserCreationForm()
+    else:
+        form = UserCreationForm()
     return render(request, 'registration/register.html', {"form": form})
 
 
@@ -85,7 +86,8 @@ def create_favor(request):
             form.save_m2m()
             messages.success(request, 'Favor has been created.')
             return HttpResponseRedirect("/")
-    form = FavorForm()
+    else:
+        form = FavorForm()
     messages.error(request, 'The form is incomplete.')
     return render(request, 'barter/favor_form.html', {"form": form})
 

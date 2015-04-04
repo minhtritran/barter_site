@@ -40,9 +40,9 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    first_name = models.CharField(max_length=30, default=None, blank=True, null=True)
-    last_name = models.CharField(max_length=30, default=None, blank=True, null=True)
-    date_of_birth = models.DateField(default=None, blank=True, null=True)
+    first_name = models.CharField(max_length=30, default=None, blank=False, null=False)
+    last_name = models.CharField(max_length=30, default=None, blank=False, null=False)
+    date_of_birth = models.DateField(default=None, blank=False, null=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

@@ -13,21 +13,38 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
 
+    
+    def clean(self):
+        #run the standard clean method first
+        cleaned_data=super(UserCreationForm, self).clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        #check if passwords are entered and match
+        if password1 and password2 and password1==password2:
+            print "pwd ok"
+        else:
+            raise forms.ValidationError("Passwords do not match!")
+
+        #always return the cleaned data
+        return cleaned_data
+
+
     def clean_email(self):
         #check if email is a .edu email
         email_domain = self.cleaned_data['email'].split('.')[-1]
         if email_domain != 'edu':
-            raise forms.ValidationError("You must register with a edu email address.")
+            raise forms.ValidationError("You must register with an edu email address.")
         return self.cleaned_data['email']
-
+    """
     def clean_password2(self):
         # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
+        password1 = self.cleaned_data['password1']
+        password2 = self.cleaned_data['password2']
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords don't match")
         return password2
-
+    """
     def save(self, commit=True):
         # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
