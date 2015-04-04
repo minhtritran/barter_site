@@ -52,8 +52,8 @@ class FavorAdmin(admin.ModelAdmin):
 
 
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'favor', 'pub_date', 'last_edit', 'id')
-    search_fields = ['sender', 'favor']
+    list_display = ('trader', 'favor', 'pub_date', 'last_edit', 'id')
+    search_fields = ['trader', 'favor']
     list_filter = ['pub_date', 'last_edit']
 
 

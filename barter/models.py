@@ -40,9 +40,9 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    first_name = models.CharField(max_length=30, default=None, blank=False, null=False)
-    last_name = models.CharField(max_length=30, default=None, blank=False, null=False)
-    date_of_birth = models.DateField(default=None, blank=False, null=False)
+    first_name = models.CharField(max_length=30, default=None, blank=True, null=True)
+    last_name = models.CharField(max_length=30, default=None, blank=True, null=True)
+    date_of_birth = models.DateField(default=None, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -122,8 +122,8 @@ class Post(models.Model):
 
 
 class Feedback(Post):
-    sender = models.ForeignKey(User, related_name='Feedback Sender')
-    receiver = models.ForeignKey(User, related_name='Feedback Receiver')
+    sender = models.ForeignKey(User, related_name='feedbacks_sent')
+    receiver = models.ForeignKey(User, related_name='feedbacks_received')
     rating = models.IntegerField(default=0)
 
     def __str__(self):
@@ -132,8 +132,8 @@ class Feedback(Post):
 
 class Favor(Post):
     title = models.CharField(max_length=32, default='')
-    author = models.ForeignKey(User, related_name='Author')
-    completed_by = models.ForeignKey(User, related_name='Completed by', null=True, default=None)
+    author = models.ForeignKey(User, related_name='favors_authored')
+    completed_by = models.ForeignKey(User, related_name='favors_completed', null=True, default=None)
     tags = models.ManyToManyField(Tag)
     allow_offers = models.BooleanField(default=False)
     status = models.CharField(max_length=16, default='open')
@@ -143,11 +143,12 @@ class Favor(Post):
 
 
 class Offer(Post):
-    favor = models.ForeignKey(Favor, related_name='Offers Favor')
-    sender = models.ForeignKey(User)
+    favor = models.ForeignKey(Favor, related_name='offers')
+    trader = models.ForeignKey(User)
+    made_by_asker = models.BooleanField(default=False, blank=False, null=False)
 
     def __str__(self):
-        return '"' + self.sender.__str__() + '"'
+        return '"' + self.trader.__str__() + '"'
 
 
 class Agreement(models.Model):
