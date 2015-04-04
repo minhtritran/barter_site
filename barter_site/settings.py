@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'dajaxice',
     'bootstrap3',
     'barter',
+    'postman',
 )
 
 MIDDLEWARE_CLASSES = (
