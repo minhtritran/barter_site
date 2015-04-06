@@ -81,3 +81,14 @@ class FavorForm(forms.ModelForm):
         if commit:
             favor.save()
         return favor
+
+class OfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ['message']
+
+    def save(self, commit=True):
+        offer = super(OfferForm, self).save(commit=False)
+        if commit:
+            offer.save()
+        return offer

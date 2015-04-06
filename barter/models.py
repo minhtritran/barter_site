@@ -141,6 +141,11 @@ class Favor(Post):
     def __str__(self):
         return '"' + self.title + '": ' + self.author.__str__()
 
+    def getCurUserOffers(self):
+        return self.offers.filter(trader=request.user.pk)
+
+    def removeCurUserOffers(self):
+        self.offers.filter(trader=request.user).delete()
 
 class Offer(Post):
     favor = models.ForeignKey(Favor, related_name='offers')
@@ -149,7 +154,6 @@ class Offer(Post):
 
     def __str__(self):
         return '"' + self.trader.__str__() + '"'
-
 
 class Agreement(models.Model):
     sender = models.ForeignKey(User, related_name='Agreement Sender', null=True)
