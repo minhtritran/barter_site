@@ -1,6 +1,17 @@
-{% extends "base_form.html" %}
+{% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Offer Form{% endblock %}
-{% block url %}finish{% endblock %}
-{% block button %}{% buttons submit='Submit Offer' reset="Cancel" %}{% endbuttons %}{% endblock %}
+{% block title %}Offer Thread{% endblock %}
+
+{% block content %}
+    <h1>Offer Thread</h1>
+    <hr/>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% block button %}
+            {% buttons submit="Reply with offer" %}{% endbuttons %}
+        {% endblock %}
+    </form>
+{% endblock %}

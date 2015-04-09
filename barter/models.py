@@ -147,13 +147,22 @@ class Favor(Post):
     def removeCurUserOffers(self):
         self.offers.filter(trader=request.user).delete()
 
+
+class OfferQuerySet(models.QuerySet):
+    def by_favor_trader(self, favor_pk, trader_pk):
+        return self.filter(favor=favor_pk, trader=trader_pk)
+
+
 class Offer(Post):
     favor = models.ForeignKey(Favor, related_name='offers')
     trader = models.ForeignKey(User)
     made_by_asker = models.BooleanField(default=False, blank=False, null=False)
 
+    objects = OfferQuerySet.as_manager()
+
     def __str__(self):
         return '"' + self.trader.__str__() + '"'
+
 
 class Agreement(models.Model):
     sender = models.ForeignKey(User, related_name='Agreement Sender', null=True)

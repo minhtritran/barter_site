@@ -27,7 +27,6 @@ class UserCreationForm(forms.ModelForm):
         #always return the cleaned data
         return cleaned_data
 
-
     def clean_email(self):
         #check if email is a .edu email
         email_domain = self.cleaned_data['email'].split('.')[-1]
@@ -72,6 +71,7 @@ class UserChangeForm(forms.ModelForm):
 
 class FavorForm(forms.ModelForm):
     tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'At least one tag'}))
+
     class Meta:
         model = Favor
         fields = ['title', 'allow_offers', 'message']
@@ -81,6 +81,7 @@ class FavorForm(forms.ModelForm):
         if commit:
             favor.save()
         return favor
+
 
 class OfferForm(forms.ModelForm):
     class Meta:

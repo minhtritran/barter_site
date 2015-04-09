@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.views import login
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
@@ -50,24 +50,7 @@ class FavorCreate(CreateView):
         # etc...
         return initial
 
-class OfferCreate(CreateView):
-    model = Offer
-    template_name = "barter/offer_form.html"
-    form_class = OfferForm
 
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get('pk')
-        return super(OfferCreate, self).get(request, *args, **kwargs)
-    """
-    def get_initial(self):
-        # Get the initial dictionary from the superclass method
-        initial = super(OfferCreate, self).get_initial()
-        # Copy the dictionary so we don't accidentally change a mutable dict
-        initial = initial.copy()
-        initial['trader'] = self.request.user.pk
-        # etc...
-        return initial
-    """
 class TagList(ListView):
     queryset = Tag.objects.all()
     template_name = "barter/tag_list.html"
@@ -97,42 +80,36 @@ def register(request):
 
 
 def create_favor(request):
-    if request.method == 'POST':
-        form = FavorForm(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.author = request.user
-            obj.save()
-            for tag in request.POST['tags'].split(','):
-                try:
-                    t = Tag.objects.get(slug=tag)
-                except Tag.DoesNotExist:
-                    t = Tag(slug=tag)
-                    t.save()
-                obj.tags.add(Tag.objects.get(slug=tag))
-            form.save_m2m()
-            messages.success(request, 'Favor has been created.')
-            return HttpResponseRedirect("/")
-    else:
-        form = FavorForm()
+    form = FavorForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.author = request.user
+        obj.save()
+        for tag in request.POST['tags'].split(','):
+            try:
+                t = Tag.objects.get(slug=tag)
+            except Tag.DoesNotExist:
+                t = Tag(slug=tag)
+                t.save()
+            obj.tags.add(Tag.objects.get(slug=tag))
+        form.save_m2m()
+        messages.success(request, 'Favor has been created.')
+        return HttpResponseRedirect("/")
     messages.error(request, 'The form is incomplete.')
     return render(request, 'barter/favor_form.html', {"form": form})
 
-def create_offer(request, pk):
-    if request.method == 'POST':
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.favor_id = pk
-            obj.trader = request.user
-            obj.save()
-            form.save_m2m()
-            messages.success(request, 'Offer has been submitted.')
-            return HttpResponseRedirect("/")
-    else:
-        form = OfferForm()
-    messages.error(request, 'The form is incomplete.')
+
+def create_offer(request, pk, trader_pk):
+    form = OfferForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.favor = Favor(pk=pk)
+        obj.trader = User(pk=trader_pk)
+        obj.save()
+        messages.success(request, 'Offer has been submitted.')
+        return redirect('/favors/' + obj.favor_id + '/')
     return render(request, 'barter/offer_form.html', {"form": form})
+
 
 def custom_login(request):
     if request.user.is_authenticated():

@@ -5,10 +5,10 @@
 {% block content %}
     <h1>{{ object.title }}</h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
-    {% if object.getCurUserOffers.count > 0 %}
-        <a class="btn btn-default">Cancel Offer</a> 
-    {% else %}
-        <a class="btn btn-default" href={% url "barter:offer_create" object.pk %}>Submit Offer</a>
+    <div>{{ hello }}</div>
+    {% if object.author.pk != user.pk %}
+        <a class="btn btn-default" href={% url "barter:create_offer" object.pk user.pk %}>Reply with an offer</a>
+        <br/>
     {% endif %}
     <br/>
     {% if object.offers.count > 0 %}
