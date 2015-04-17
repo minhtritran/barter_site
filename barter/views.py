@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.views import login
+from django.db.models import Max
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
@@ -34,6 +35,17 @@ class FavorList(ListView):
 class FavorDetail(DetailView):
     model = Favor
     template_name = "barter/favor_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(FavorDetail, self).get_context_data(**kwargs)
+        list = []
+
+        #offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('-pub_date')
+
+        #list.append(offers)
+
+        context['offer_threads'] = list
+        return context
 
 
 class FavorCreate(CreateView):
@@ -100,15 +112,18 @@ def create_favor(request):
 
 
 def create_offer(request, pk, trader_pk):
+    thread = Favor.objects.get(pk=pk).offers.filter(trader=trader_pk).order_by('pub_date')
     form = OfferForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.favor = Favor(pk=pk)
         obj.trader = User(pk=trader_pk)
+        if request.user.id is Favor.objects.get(pk=pk).author_id:
+            obj.made_by_asker = True
         obj.save()
         messages.success(request, 'Offer has been submitted.')
         return redirect('/favors/' + obj.favor_id + '/')
-    return render(request, 'barter/offer_form.html', {"form": form})
+    return render(request, 'barter/offer_form.html', {"form": form, "thread": thread})
 
 
 def custom_login(request):

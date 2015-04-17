@@ -3,6 +3,11 @@
 {% block title %}Favor{% endblock %}
 
 {% block content %}
+    <div>
+        {% for offer in offer_threads %}
+        <div>{{ offer.pub_date}}{{ offer.message }}</div>
+        {% endfor %}
+    </div>
     <h1>{{ object.title }}</h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
@@ -15,7 +20,7 @@
         <h4>Current offers</h4>
         <div>
             {% for offer in object.offers.all %}
-               <div><a href={% url "barter:user_detail" offer.trader.pk %}><b>{{ offer.trader }}</b></a>: {{ offer.message }}</div>
+               <div><a href={% url "barter:user_detail" offer.trader.pk %}><b>{{ offer.trader }}</b></a>: {{ offer.message }} <a href={% url "barter:create_offer" object.pk offer.trader.pk %}>Reply</a></div>
             {% endfor %}
         </div>
     {% else %}
