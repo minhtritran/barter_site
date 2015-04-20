@@ -40,12 +40,19 @@ class FavorDetail(DetailView):
         context = super(FavorDetail, self).get_context_data(**kwargs)
         list = []
 
-        #offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('-pub_date')
+        #offers = Favor.objects.get(pk=self.kwargs['pk']).offers.values('trader').annotate(max_date=Max('pub_date')).filter(date=F('max_date'))
+        offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('trader', '-pub_date').distinct('trader')
 
-        #list.append(offers)
+        list.append(offers)
 
         context['offer_threads'] = list
         return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(FavorDetail, self).get_context_data(**kwargs)
+        print(request.POST["trader"])
+
+        return self.render_to_response(context)
 
 
 class FavorCreate(CreateView):

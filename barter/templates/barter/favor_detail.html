@@ -20,14 +20,21 @@
         <h4>Current offers</h4>
         <div>
             {% for offer in object.offers.all %}
+                <div>
                 {% if offer.made_by_asker %}
-                    <div><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ offer.message }}
+                    <a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ offer.message }}
                 {% else %}
-                    <div><a href={% url "barter:user_detail" offer.trader.pk %}><b>{{ offer.trader }}</b></a>: {{ offer.message }}
+                    <a href={% url "barter:user_detail" offer.trader.pk %}><b>{{ offer.trader }}</b></a>: {{ offer.message }}
                 {% endif %}
                 {% if object.author.pk == user.pk %}
-                    <a href={% url "barter:create_offer" object.pk offer.trader.pk %}>Reply</a></div>
+                    <a href={% url "barter:create_offer" object.pk offer.trader.pk %}>Reply</a>
+                    <form action={% url "barter:favor_detail" object.pk %} method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="trader" value="{{ offer.trader.pk }}"/>
+                        <input type="submit" value="Accept" />
+                    </form>
                 {% endif %}
+                </div>
             {% endfor %}
         </div>
     {% else %}
