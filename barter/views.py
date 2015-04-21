@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.views import login
 from django.db.models import Max
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
@@ -42,18 +42,20 @@ class FavorDetail(DetailView):
 
         #offers = Favor.objects.get(pk=self.kwargs['pk']).offers.values('trader').annotate(max_date=Max('pub_date')).filter(date=F('max_date'))
         offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('trader', '-pub_date').distinct('trader')
-
+        #offers = Favor.objects.raw('SELECT * FROM favor INNER JOIN offer ON(favor_pk = offer_favor) WHERE favor_pk = %s GROUP BY trader HAVING MAX(offer_pub_date)', [self.kwargs['pk']])
+        
         list.append(offers)
 
         context['offer_threads'] = list
         return context
 
+    """
     def post(self, request, *args, **kwargs):
         context = super(FavorDetail, self).get_context_data(**kwargs)
         print(request.POST["trader"])
 
         return self.render_to_response(context)
-
+    """
 
 class FavorCreate(CreateView):
     model = Favor
@@ -138,3 +140,9 @@ def custom_login(request):
         return HttpResponseRedirect("/")
     else:
         return login(request)
+
+def accept_offer(request, pk, trader_pk):
+    if(request.POST.get('acceptbtn')):
+        print(int(request.POST.get('trader')) )
+    return render(request, 'barter/favor_detail.html')
+

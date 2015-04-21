@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^favors/tag/(?P<slug>[-\w\d]+)/$', views.FavorList.as_view(), name='favor_list_tagged'),
     url(r'^favors/(?P<pk>\d+)/$', views.FavorDetail.as_view(), name='favor_detail'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)$', views.create_offer, name='create_offer'),
+    url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)/accept/$', views.accept_offer, name='accept_offer'),
     url(r'^favors/create/$', views.FavorCreate.as_view(), name='favor_create'),
     url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
     url(r'^tags/$', views.TagList.as_view(), name='tag_list'),

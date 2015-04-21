@@ -28,10 +28,10 @@
                 {% endif %}
                 {% if object.author.pk == user.pk %}
                     <a href={% url "barter:create_offer" object.pk offer.trader.pk %}>Reply</a>
-                    <form action={% url "barter:favor_detail" object.pk %} method="POST">
+                    <form action={% url "barter:accept_offer" object.pk offer.trader.pk %} method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="trader" value="{{ offer.trader.pk }}"/>
-                        <input type="submit" value="Accept" />
+                        <input type="submit" class="btn" value="Accept" name="acceptbtn" />
                     </form>
                 {% endif %}
                 </div>
