@@ -82,7 +82,7 @@
     "@btn-danger-bg": "@brand-danger",
     "@btn-danger-border": "darken(@btn-danger-bg, 5%)",
     "@btn-link-disabled-color": "@gray-light",
-    "@input-bg": "#F5F5F5",
+    "@input-bg": "#eee",
     "@input-bg-disabled": "@gray-lighter",
     "@input-color": "@gray",
     "@input-border": "#ccc",
@@ -426,5 +426,5 @@
     "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=13be8ed64e4cf90eb13d"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=5e2c9b0b1e9b35222a6f"
 }
