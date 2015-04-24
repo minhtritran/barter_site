@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm
+from django.db import connection
 
 
 # Create your views here.
@@ -38,15 +39,19 @@ class FavorDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(FavorDetail, self).get_context_data(**kwargs)
-        list = []
+        listOffers = []
 
-        #offers = Favor.objects.get(pk=self.kwargs['pk']).offers.values('trader').annotate(max_date=Max('pub_date')).filter(date=F('max_date'))
-        offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('trader', '-pub_date').distinct('trader')
-        #offers = Favor.objects.raw('SELECT * FROM favor INNER JOIN offer ON(favor_pk = offer_favor) WHERE favor_pk = %s GROUP BY trader HAVING MAX(offer_pub_date)', [self.kwargs['pk']])
-        
-        list.append(offers)
+        # offers = Favor.objects.get(pk=self.kwargs['pk']).offers.values('trader').annotate(max_date=Max('pub_date')).filter(date=F('max_date'))
+        # offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('trader', '-pub_date').distinct('trader')
+        # offers = Favor.objects.raw('SELECT * FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) WHERE barter_favor.id = %s GROUP BY trader_id HAVING MAX(barter_offer.pub_date)', [self.kwargs['pk']])
+        cursor = connection.cursor()
+        cursor.execute('SELECT trader_id FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = 3 GROUP BY trader_id ', [self.kwargs['pk']])
+        result = cursor.fetchall()
 
-        context['offer_threads'] = list
+        for row in result:
+            offers = Favor.objects.raw('SELECT * FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = %s AND trader_id = %s ORDER BY barter_offer.pub_date DESC', [self.kwargs['pk'], row[0]])[0]
+            listOffers.append(offers)
+        context['offer_threads'] = listOffers
         return context
 
     """
@@ -56,6 +61,7 @@ class FavorDetail(DetailView):
 
         return self.render_to_response(context)
     """
+
 
 class FavorCreate(CreateView):
     model = Favor
@@ -141,8 +147,8 @@ def custom_login(request):
     else:
         return login(request)
 
-def accept_offer(request, pk, trader_pk):
-    if(request.POST.get('acceptbtn')):
-        print(int(request.POST.get('trader')) )
-    return render(request, 'barter/favor_detail.html')
 
+def accept_offer(request, pk, trader_pk):
+    if(request.POST['acceptbtn']):
+        print(int(request.POST['trader']))
+    return HttpResponseRedirect("/favors/" + pk)

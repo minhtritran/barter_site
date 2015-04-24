@@ -3,11 +3,6 @@
 {% block title %}Favor{% endblock %}
 
 {% block content %}
-    <div>
-        {% for offer in offer_threads %}
-        <div>{{ offer.pub_date}}{{ offer.message }}</div>
-        {% endfor %}
-    </div>
     <h1>{{ object.title }}</h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
@@ -19,21 +14,17 @@
     {% if object.offers.count > 0 %}
         <h4>Current offers</h4>
         <div>
-            {% for offer in object.offers.all %}
-                <div>
-                {% if offer.made_by_asker %}
-                    <a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ offer.message }}
-                {% else %}
-                    <a href={% url "barter:user_detail" offer.trader.pk %}><b>{{ offer.trader }}</b></a>: {{ offer.message }}
-                {% endif %}
-                {% if object.author.pk == user.pk %}
-                    <a href={% url "barter:create_offer" object.pk offer.trader.pk %}>Reply</a>
-                    <form action={% url "barter:accept_offer" object.pk offer.trader.pk %} method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="trader" value="{{ offer.trader.pk }}"/>
-                        <input type="submit" class="btn" value="Accept" name="acceptbtn" />
-                    </form>
-                {% endif %}
+            {% for offer in offer_threads %}
+                <div style="margin-bottom: 5px">
+                    <a href={% url "barter:user_detail" offer.trader_id %}><b>{{ offer.email }}</b></a>: {{ offer.message }}
+                    {% if object.author.pk == user.pk %}
+                        <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>Reply</a>
+                        <form action={% url "barter:accept_offer" object.pk offer.trader_id %} method="POST" style="display: inline-block">
+                            {% csrf_token %}
+                            <input type="hidden" name="trader" value="{{ offer.trader_id }}"/>
+                            <input type="submit" class="btn btn-default btn-sm" value="Accept" name="acceptbtn" />
+                        </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
