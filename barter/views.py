@@ -45,9 +45,8 @@ class FavorDetail(DetailView):
         # offers = Favor.objects.get(pk=self.kwargs['pk']).offers.order_by('trader', '-pub_date').distinct('trader')
         # offers = Favor.objects.raw('SELECT * FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) WHERE barter_favor.id = %s GROUP BY trader_id HAVING MAX(barter_offer.pub_date)', [self.kwargs['pk']])
         cursor = connection.cursor()
-        cursor.execute('SELECT trader_id FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = 3 GROUP BY trader_id ', [self.kwargs['pk']])
+        cursor.execute('SELECT trader_id FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = %s GROUP BY trader_id ', [self.kwargs['pk']])
         result = cursor.fetchall()
-
         for row in result:
             offers = Favor.objects.raw('SELECT * FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = %s AND trader_id = %s ORDER BY barter_offer.pub_date DESC', [self.kwargs['pk'], row[0]])[0]
             listOffers.append(offers)
