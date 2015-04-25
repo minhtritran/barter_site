@@ -26,7 +26,7 @@
                         <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>Reply</a>
                         <form action={% url "barter:accept_offer" object.pk offer.trader_id %} method="POST" style="display: inline-block">
                             {% csrf_token %}
-                            <input type="hidden" name="trader" value="{{ offer.trader_id }}"/>
+                            <input type="hidden" name="customOffer" value="{{ offer.pk }}"/>
                             {% if object.author.pk == user.pk and not offer.made_by_asker %}
                                 <input type="submit" class="btn btn-default btn-sm" value="Accept" name="acceptbtn" />
                             {% endif %}

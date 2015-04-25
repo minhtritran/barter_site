@@ -182,5 +182,14 @@ def custom_login(request):
 
 def accept_offer(request, pk, trader_pk):
     if(request.POST['acceptbtn']):
-        print(int(request.POST['trader']))
+        #Close favor post
+        curFavor = Favor.objects.get(pk=pk)
+        curFavor.status = 'closed'
+        curFavor.save()
+
+        #Create new agreement
+        curAgreement = Agreement()
+        curAgreement.favor = curFavor
+        curAgreement.accepter = User.objects.get(pk=trader_pk)
+        curAgreement.save()
     return HttpResponseRedirect("/favors/" + pk)

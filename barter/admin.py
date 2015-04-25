@@ -58,8 +58,8 @@ class OfferAdmin(admin.ModelAdmin):
 
 
 class AgreementAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'favor', 'receiver', 'status', 'id')
-    search_fields = ['sender', 'receiver']
+    list_display = ('favor', 'accepter', 'status', 'id')
+    search_fields = ['favor', 'accepter']
 
 admin.site.unregister(Group)
 admin.site.register(Tag, TagAdmin)

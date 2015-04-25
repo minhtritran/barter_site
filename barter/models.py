@@ -165,10 +165,9 @@ class Offer(Post):
 
 
 class Agreement(models.Model):
-    sender = models.ForeignKey(User, related_name='agreement_sender', null=True)
-    favor = models.ForeignKey(Favor, related_name='agreement_favor', null=True)
-    receiver = models.ForeignKey(User, related_name='agreement_receiver', null=True)
-    status = models.CharField(max_length=16, default='pending')
+    favor = models.ForeignKey(Favor, null=True)
+    accepter = models.ForeignKey(User, null=True)
+    status = models.CharField(max_length=16, default='open')
     customOffer = models.ForeignKey(Offer, null=True)
 
     def __str__(self):
