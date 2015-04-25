@@ -17,5 +17,7 @@ urlpatterns = patterns(
     url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
     url(r'^tags/$', views.TagList.as_view(), name='tag_list'),
     url(r'^users/$', views.UserList.as_view(), name='user_list'),
-    url(r'^users/(?P<pk>\d+)/$', views.UserDetail.as_view(), name='user_detail')
+    url(r'^users/(?P<pk>\d+)/$', views.UserDetail.as_view(), name='user_detail'),
+    url(r'^users/(?P<pk>\d+)/edit$', views.edit_user, name='user_list'),
+    url(r'^users/(?P<pk>\d+)/feedback/$', views.create_feedback, name='feedback'),
 )

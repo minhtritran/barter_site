@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Feedback Thread{% endblock %}
+
+{% block content %}
+    <h1>Feedback Thread</h1>
+    <div>
+        {% for feedback in thread %}
+            <div>
+                {{ feedback.pub_date | date:"m/d/y h:i A"}} -
+                {{ feedback.message }}
+            </div>
+        {% endfor %}
+    </div>
+    <hr/>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% block button %}
+            {% buttons submit="Submit Feedback" %}{% endbuttons %}
+        {% endblock %}
+    </form>
+{% endblock %}

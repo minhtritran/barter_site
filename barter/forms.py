@@ -15,20 +15,20 @@ class UserCreationForm(forms.ModelForm):
         fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
 
     def clean(self):
-        #run the standard clean method first
-        cleaned_data=super(UserCreationForm, self).clean()
+        # run the standard clean method first
+        cleaned_data = super(UserCreationForm, self).clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
 
-        #check if passwords are entered and match
+        # check if passwords are entered and match
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords do not match!")
 
-        #always return the cleaned data
+        # always return the cleaned data
         return cleaned_data
 
     def clean_email(self):
-        #check if email is a .edu email
+        # check if email is a .edu email
         email_domain = self.cleaned_data['email'].split('.')[-1]
         if email_domain != 'edu':
             raise forms.ValidationError("You must register with an edu email address.")
@@ -56,11 +56,33 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     password hash display field.
     """
-    password = ReadOnlyPasswordHashField()
+    password = forms.CharField(label='Current Password', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'date_of_birth', 'is_active', 'is_admin')
+        fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
+
+    def clean(self):
+        # run the standard clean method first
+        cleaned_data = super(UserCreationForm, self).clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        # check if passwords are entered and match
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match!")
+
+        # always return the cleaned data
+        return cleaned_data
+
+    def clean_email(self):
+        # check if email is a .edu email
+        email_domain = self.cleaned_data['email'].split('.')[-1]
+        if email_domain != 'edu':
+            raise forms.ValidationError("You must register with an edu email address.")
+        return self.cleaned_data['email']
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -93,3 +115,17 @@ class OfferForm(forms.ModelForm):
         if commit:
             offer.save()
         return offer
+
+
+class FeedbackForm(forms.ModelForm):
+    rating = forms.DecimalField(label="Rating")
+
+    class Meta:
+        model = Feedback
+        fields = ['message']
+
+    def save(self, commit=True):
+        feedback = super(FeedbackForm, self).save(commit=False)
+        if commit:
+            feedback.save()
+        return feedback

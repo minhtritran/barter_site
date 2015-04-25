@@ -6,10 +6,23 @@
     <h1>User Profile</h1>
     <hr/>
     <dl class="dl-horizontal">
-        <dt>Email</dt><dd>{{ object.email }}</dd>
+        <dt>Email</dt><dd>{{ object.email }} edit</dd>
         <dt>First Name</dt><dd>{{ object.first_name }}</dd>
         <dt>Last Name</dt><dd>{{ object.last_name }}</dd>
         <dt>Date of Birth</dt><dd>{{ object.date_of_birth }}</dd>
         <dt>Gender</dt><dd>{{ object.gender }}</dd>
     </dl>
+    <a class="btn btn-default" href="edit">Edit Profile</a>
+    <br />
+    <a class="btn btn-default" href="feedback">Leave Feedback</a>
+    <h1>Feedback Thread</h1>
+    <div>
+        {% for feedback in thread %}
+            <div>
+                {{ feedback.pub_date | date:"m/d/y h:i A" }}{{ feedback.sender }} -
+                {{ feedback.message }}
+            </div>
+        {% endfor %}
+    </div>
+    <hr/>
 {% endblock %}

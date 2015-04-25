@@ -7,7 +7,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
-from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm
+from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm
 from django.db import connection
 
 
@@ -93,6 +93,13 @@ class UserDetail(DetailView):
     model = User
     template_name = "barter/user.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(UserDetail, self).get_context_data(**kwargs)
+        thread = Feedback.objects.filter(receiver=self.kwargs['pk']).order_by('pub_date')
+
+        context['thread'] = thread
+        return context
+
 
 def register(request):
     if request.method == 'POST':
@@ -103,6 +110,15 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {"form": form})
+
+
+def edit_user(request, pk):
+    form = UserChangeForm(initial={'email': request.user.email,
+                                   'first_name': request.user.first_name,
+                                   'last_name': request.user.last_name,
+                                   'date_of_birth': request.user.date_of_birth,
+                                   'gender': request.user.gender})
+    return render(request, 'barter/user_form.html', {"form": form})
 
 
 def create_favor(request):
@@ -138,6 +154,23 @@ def create_offer(request, pk, trader_pk):
         messages.success(request, 'Offer has been submitted.')
         return redirect('/favors/' + obj.favor_id + '/')
     return render(request, 'barter/offer_form.html', {"form": form, "thread": thread})
+
+
+def create_feedback(request, pk):
+    if request.user is pk:
+        messages.error(request, 'You cannot give feedback to yourself.')
+        return redirect('/users/' + pk + '/')
+    thread = Feedback.objects.filter(receiver=pk).order_by('pub_date')
+    form = FeedbackForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.sender = request.user
+        obj.rating = request.POST['rating']
+        obj.receiver = User(pk=pk)
+        obj.save()
+        messages.success(request, 'Feedback has been submitted.')
+        return redirect('/users/' + obj.receiver_id + '/')
+    return render(request, 'barter/feedback_form.html', {"form": form, "thread": thread})
 
 
 def custom_login(request):
