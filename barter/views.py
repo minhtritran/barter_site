@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm
 from django.db import connection
+from django.template.defaultfilters import slugify
 
 
 # Create your views here.
@@ -128,6 +129,7 @@ def create_favor(request):
         obj.author = request.user
         obj.save()
         for tag in request.POST['tags'].split(','):
+            tag = slugify(tag)
             try:
                 t = Tag.objects.get(slug=tag)
             except Tag.DoesNotExist:
