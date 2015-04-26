@@ -25,11 +25,14 @@ class FavorList(ListView):
     def get(self, request, *args, **kwargs):
         slug = kwargs.get('slug')
         slug_id = Tag.objects.filter(slug=slug)
+        user_pk = kwargs.get('user_pk')
         if slug_id:
-            self.queryset = Favor.objects.filter(tags__pk=slug_id)
+            self.queryset = Favor.objects.filter(tags__pk=slug_id).exclude(status='closed')
+        elif user_pk:
+            self.queryset = Favor.objects.filter(author=user_pk)
         else:
-            self.queryset = Favor.objects.all()
-        if not self.queryset:
+            self.queryset = Favor.objects.all().exclude(status='closed')
+        if not self.queryset and slug_id:
             messages.warning(request, "No favors with this tag.")
         return super(FavorList, self).get(request, *args, **kwargs)
 
@@ -145,6 +148,8 @@ def create_favor(request):
 
 def create_offer(request, pk, trader_pk):
     thread = Favor.objects.get(pk=pk).offers.filter(trader=trader_pk).order_by('pub_date')
+    trader = int(trader_pk)
+    author = Favor.objects.get(pk=pk).author.pk
     form = OfferForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
@@ -155,7 +160,7 @@ def create_offer(request, pk, trader_pk):
         obj.save()
         messages.success(request, 'Offer has been submitted.')
         return redirect('/favors/' + obj.favor_id + '/')
-    return render(request, 'barter/offer_form.html', {"form": form, "thread": thread})
+    return render(request, 'barter/offer_form.html', {"form": form, "thread": thread, "trader": trader, "author": author, "user": request.user})
 
 
 def create_feedback(request, pk):

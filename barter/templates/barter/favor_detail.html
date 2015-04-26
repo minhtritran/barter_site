@@ -3,10 +3,14 @@
 {% block title %}Favor{% endblock %}
 
 {% block content %}
+
+    {% if object.status == 'closed' %}
+        <div class="alert alert-warning" role="alert">This favor has been closed.</div>
+    {% endif %}
     <h1>{{ object.title }}</h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
-    {% if object.author.pk != user.pk %}
+    {% if object.author.pk != user.pk and object.status != 'closed' %}
         <a class="btn btn-default" href={% url "barter:create_offer" object.pk user.pk %}>Reply with an offer</a>
         <br/>
     {% endif %}
@@ -22,16 +26,24 @@
                     {% else %}
                         {{ offer.message }}
                     {% endif %}
-                    {% if object.author.pk == user.pk or offer.trader_id == user.pk %}
-                        <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>Reply</a>
-                        <form action={% url "barter:accept_offer" object.pk offer.trader_id %} method="POST" style="display: inline-block">
-                            {% csrf_token %}
-                            <input type="hidden" name="customOffer" value="{{ offer.pk }}"/>
-                            {% if object.author.pk == user.pk and not offer.made_by_asker %}
-                                <input type="submit" class="btn btn-default btn-sm" value="Accept" name="acceptbtn" />
+                    {% if object.status != 'closed' %}
+                        {% if object.author.pk == user.pk or offer.trader_id == user.pk %}
+                            <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>Reply</a>
+                            {% if offer.id == user.pk and not offer.made_by_asker or offer.author_id == user.pk and offer.made_by_asker %}
+                            {% else %}
+                                <form action={% url "barter:accept_offer" object.pk offer.trader_id %} method="POST" style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="customOffer" value="{{ offer.pk }}"/>
+                                    <input type="submit" class="btn btn-default btn-sm" value="Accept" name="acceptbtn" />
+                                </form>
                             {% endif %}
-                        </form>
+                        {% else %}
+                            <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>View</a>
+                        {% endif %}
+                    {% else %}
+                        <a class="btn btn-default btn-sm" href={% url "barter:create_offer" object.pk offer.trader_id %}>View</a>
                     {% endif %}
+
                 </div>
             {% endfor %}
         </div>

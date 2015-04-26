@@ -14,6 +14,7 @@ urlpatterns = patterns(
     url(r'^$', views.home, name='home'),
     url(r'^favors/$', views.FavorList.as_view(), name='favor_list'),
     url(r'^favors/tag/(?P<slug>[-\w\d]+)/$', views.FavorList.as_view(), name='favor_list_tagged'),
+    url(r'^favors/user/(?P<user_pk>\d+)/$', views.FavorList.as_view(), name='favor_list_user'),
     url(r'^favors/(?P<pk>\d+)/$', views.FavorDetail.as_view(), name='favor_detail'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)$', views.create_offer, name='create_offer'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)/accept/$', views.accept_offer, name='accept_offer'),
