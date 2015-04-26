@@ -1,10 +1,14 @@
 from django.conf.urls import patterns, url
-
 from barter import views
 from barter.views import custom_login
+# from dajaxice.core import dajaxice_config
+# from dajaxice.core.Dajaxice import dajaxice_autodiscover
+# dajaxice_autodiscover()
+
 
 urlpatterns = patterns(
     '',
+    # url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     url('^login/', custom_login, name="login"),
     url('^register/', views.register, name='register'),
     url(r'^$', views.home, name='home'),
