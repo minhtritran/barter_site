@@ -10,7 +10,7 @@ except ImportError:
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from barter.models import Agreement
@@ -404,20 +404,21 @@ class UpdateMessageMixin(object):
             #Close agreement
             masterMessage = Message.objects.get(pk=int(request.POST["thread"]))
             curAgreement = Agreement.objects.get(pk=masterMessage.agreement.pk)
+            finalMessage = Message(subject=masterMessage.subject, body="Favor agreement has been closed by other user. Conversation is now terminated.", moderation_status='a')
+            finalMessage.sender = request.user
+            if masterMessage.sender == request.user:
+                finalMessage.recipient = masterMessage.recipient
+            else:
+                finalMessage.recipient = masterMessage.sender
+            finalMessage.thread = masterMessage
             if curAgreement.status == "open":
-                finalMessage = Message(subject=masterMessage.subject, body="Favor agreement has been closed by other user. Conversation is now terminated.", moderation_status='a')
-                finalMessage.sender = request.user
-                if masterMessage.sender == request.user:
-                    finalMessage.recipient = masterMessage.recipient
-                else:
-                    finalMessage.recipient = masterMessage.sender
-                finalMessage.thread = masterMessage
                 finalMessage.save()
                 curAgreement.status = "closed"
                 curAgreement.save()
 
             messages.success(request, self.success_msg, fail_silently=True)
-            return redirect(request.GET.get('next') or self.success_url or next_url)
+            #return redirect(request.GET.get('next') or self.success_url or next_url)
+            return HttpResponseRedirect("/users/" + str(finalMessage.recipient.pk) + "/feedback/")
         else:
             messages.warning(request, _("Select at least one object."), fail_silently=True)
             return redirect(next_url)
