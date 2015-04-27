@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
+from barter.models import Agreement
 try:
     from django.utils.six.moves.urllib.parse import urlsplit, urlunsplit  # Django 1.4.11, 1.5.5
 except ImportError:
@@ -345,8 +346,11 @@ class DisplayMixin(object):
             'form': self.form_class(initial=received.quote(*self.formatters)) if received else None,
             'next_url': self.request.GET.get('next') or reverse('postman_inbox'),
         })
+        #Get agreement status
+        masterMessage = Message.objects.get(pk=int(self.kwargs['thread_id']))
+        curAgreement = Agreement.objects.get(pk=masterMessage.agreement.pk)
+        context['agreement_status'] = curAgreement.status
         return context
-
 
 class MessageView(DisplayMixin, TemplateView):
     """Display one specific message."""
@@ -396,6 +400,22 @@ class UpdateMessageMixin(object):
             sender_rows = Message.objects.as_sender(user, filter).update(**{'sender_{0}'.format(self.field_bit): self.field_value})
             if not (recipient_rows or sender_rows):
                 raise Http404  # abnormal enough, like forged ids
+
+            #Close agreement
+            masterMessage = Message.objects.get(pk=int(request.POST["thread"]))
+            curAgreement = Agreement.objects.get(pk=masterMessage.agreement.pk)
+            if curAgreement.status == "open":
+                finalMessage = Message(subject=masterMessage.subject, body="Favor agreement has been closed by other user. Conversation is now terminated.", moderation_status='a')
+                finalMessage.sender = request.user
+                if masterMessage.sender == request.user:
+                    finalMessage.recipient = masterMessage.recipient
+                else:
+                    finalMessage.recipient = masterMessage.sender
+                finalMessage.thread = masterMessage
+                finalMessage.save()
+                curAgreement.status = "closed"
+                curAgreement.save()
+
             messages.success(request, self.success_msg, fail_silently=True)
             return redirect(request.GET.get('next') or self.success_url or next_url)
         else:
@@ -413,7 +433,7 @@ class ArchiveView(UpdateMessageMixin, View):
 class DeleteView(UpdateMessageMixin, View):
     """Mark messages/conversations as deleted."""
     field_bit = 'deleted_at'
-    success_msg = lz_("Messages or conversations successfully deleted.")
+    success_msg = lz_("The favor agreement has been successfully closed. Please leave a rating/feedback for the other user regarding this favor agreement.")
     field_value = now()
 
 

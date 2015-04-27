@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import six
 from django.utils.encoding import force_text, python_2_unicode_compatible
+from barter.models import Agreement
 try:
     from django.utils.text import Truncator  # Django 1.4
 except ImportError:
@@ -259,6 +260,7 @@ class Message(models.Model):
     recipient_archived = models.BooleanField(_("archived by recipient"), default=False)
     sender_deleted_at = models.DateTimeField(_("deleted by sender at"), null=True, blank=True)
     recipient_deleted_at = models.DateTimeField(_("deleted by recipient at"), null=True, blank=True)
+    agreement = models.ForeignKey(Agreement, null=True, blank=True)
     # moderation fields
     moderation_status = models.CharField(_("status"), max_length=1, choices=STATUS_CHOICES, default=STATUS_PENDING)
     moderation_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='moderated_messages',
