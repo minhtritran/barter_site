@@ -202,9 +202,15 @@ def accept_offer(request, pk, trader_pk):
         curAgreement.save()
 
         #Create message
-        curMessage = Message(subject=curFavor.title, body="Favor agreement has been made.", moderation_status='a')
+        curMessage = Message(subject=curFavor.title, body="Favor agreement has been made. You may now initiate conversation with the other user.", moderation_status='a')
         curMessage.sender = User.objects.get(pk=trader_pk)
         curMessage.recipient = curFavor.author
         curMessage.save()
-    #return HttpResponseRedirect("/favors/" + pk)
+        curMessage.thread = curMessage
+        curMessage.save()
+        otherMessage = Message(subject=curFavor.title, body="Favor agreement has been made. You may now initiate conversation with the other user.", moderation_status='a')
+        otherMessage.sender = curFavor.author
+        otherMessage.recipient = User.objects.get(pk=trader_pk)
+        otherMessage.thread = curMessage
+        otherMessage.save()
     return HttpResponseRedirect("/messages/")
