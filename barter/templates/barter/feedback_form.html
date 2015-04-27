@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
-
+{% load staticfiles %}
 {% block title %}Feedback Thread{% endblock %}
 
 {% block content %}
@@ -14,6 +14,10 @@
         {% endfor %}
     </div>
     <hr/>
+
+    <div class="stars">
+        <img class="star" name="1">
+    </div>
     <form method="post" action="">
         {% csrf_token %}
         {% bootstrap_form form %}

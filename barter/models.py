@@ -124,7 +124,7 @@ class Post(models.Model):
 class Feedback(Post):
     sender = models.ForeignKey(User, related_name='feedbacks_sent')
     receiver = models.ForeignKey(User, related_name='feedbacks_received')
-    rating = models.IntegerField(default=0)
+    rating = models.DecimalField(decimal_places=2, max_digits=4, default=0)
 
     def __str__(self):
         return self.sender.__str__() + ' ' + str(self.rating)
