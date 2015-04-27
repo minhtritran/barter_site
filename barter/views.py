@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
+from postman.models import Message
 from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm
 from django.db import connection
 from django.template.defaultfilters import slugify
@@ -199,4 +200,11 @@ def accept_offer(request, pk, trader_pk):
         curAgreement.favor = curFavor
         curAgreement.accepter = User.objects.get(pk=trader_pk)
         curAgreement.save()
-    return HttpResponseRedirect("/favors/" + pk)
+
+        #Create message
+        curMessage = Message(subject=curFavor.title, body="Favor agreement has been made.", moderation_status='a')
+        curMessage.sender = User.objects.get(pk=trader_pk)
+        curMessage.recipient = curFavor.author
+        curMessage.save()
+    #return HttpResponseRedirect("/favors/" + pk)
+    return HttpResponseRedirect("/messages/")
