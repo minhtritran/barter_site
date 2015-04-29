@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from postman.models import Message
-from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm
+from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm, PasswordForm
 from django.db import connection
 from django.template.defaultfilters import slugify
 
@@ -103,6 +103,8 @@ class UserDetail(DetailView):
         thread = Feedback.objects.filter(receiver=self.kwargs['pk']).order_by('pub_date')
 
         context['thread'] = thread
+        context['currentUser'] = self.request.user
+
         return context
 
 
@@ -118,13 +120,24 @@ def register(request):
 
 
 @login_required
-def edit_user(request, pk):
-    form = UserChangeForm(initial={'email': request.user.email,
-                                   'first_name': request.user.first_name,
-                                   'last_name': request.user.last_name,
-                                   'date_of_birth': request.user.date_of_birth,
-                                   'gender': request.user.gender})
-    return render(request, 'barter/user_form.html', {"form": form})
+def user_edit(request, pk):
+    form = UserChangeForm(request.POST or None, initial={'email': request.user.email,
+                                                         'first_name': request.user.first_name,
+                                                         'last_name': request.user.last_name,
+                                                         'date_of_birth': request.user.date_of_birth,
+                                                         'gender': request.user.gender})
+    form2 = PasswordForm(request.POST or None)
+
+    if form.is_valid() or form2.is_valid():
+        user = User.objects.get(pk=pk)
+        obj = UserCreationForm(request.POST, instance=user)
+        if form2.is_valid():
+            obj.setPassword(form2.password1)
+        obj.save()
+        messages.success(request, 'User profile successfully updated.')
+        return HttpResponseRedirect("/")
+
+    return render(request, 'barter/user_form.html', {"form": form, "form2": form2})
 
 
 @login_required
@@ -168,7 +181,7 @@ def create_offer(request, pk, trader_pk):
 
 @login_required
 def create_feedback(request, pk):
-    if request.user is pk:
+    if request.user.pk is pk:
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
     thread = Feedback.objects.filter(receiver=pk).order_by('pub_date')
@@ -209,7 +222,6 @@ def accept_offer(request, pk, trader_pk):
         curMessage = Message(subject=curFavor.title, body="Favor agreement has been made. You may now initiate conversation with the other user.", moderation_status='a')
         curMessage.sender = User.objects.get(pk=trader_pk)
         curMessage.recipient = curFavor.author
-        curMessage.agreement = curAgreement
         curMessage.save()
         curMessage.thread = curMessage
         curMessage.save()

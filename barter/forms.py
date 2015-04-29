@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
@@ -57,26 +58,23 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     password hash display field.
     """
-    password = forms.CharField(label='Current Password', widget=forms.PasswordInput)
-    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
 
-    def clean(self):
-        # run the standard clean method first
-        cleaned_data = super(UserCreationForm, self).clean()
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-
-        # check if passwords are entered and match
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords do not match!")
-
-        # always return the cleaned data
-        return cleaned_data
+    # def clean(self):
+    #     # run the standard clean method first
+    #     cleaned_data = super(UserCreationForm, self).clean()
+    #     password1 = cleaned_data.get("password1")
+    #     password2 = cleaned_data.get("password2")
+    #
+    #     # check if passwords are entered and match
+    #     if password1 and password2 and password1 != password2:
+    #         raise forms.ValidationError("Passwords do not match!")
+    #
+    #     # always return the cleaned data
+    #     return cleaned_data
 
     def clean_email(self):
         # check if email is a .edu email
@@ -90,6 +88,42 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+
+class PasswordForm(forms.Form):
+    password = forms.CharField(label='Current Password', widget=forms.PasswordInput, required=False)
+    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput, required=False)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput, required=False)
+
+    def __init__(self, data=None, user=None, *args, **kwargs):
+        self.user = user
+        super(PasswordForm, self).__init__(data=data, *args, **kwargs)
+
+    def clean_current_password(self):
+        cleaned_data = self.cleaned_data
+        current_password = cleaned_data.get('current_password', '')
+
+        if not self.user.check_password(current_password):
+            raise ValidationError('Wrong current password.')
+
+        return current_password
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        new_password = cleaned_data.get('new_password', '')
+        retyped_password = cleaned_data.get('retyped_password', '')
+
+        if len(new_password) == 0 or len(retyped_password) == 0:
+            raise ValidationError('Blank password fields.')
+
+        if new_password != retyped_password:
+            raise ValidationError('New password and retyped password do not match.')
+
+        return cleaned_data
+
+    def save(self):
+        self.user.set_password(self.password1)
+        return self.user
 
 
 class FavorForm(forms.ModelForm):
@@ -123,7 +157,7 @@ class OfferForm(forms.ModelForm):
 
 
 class FeedbackForm(forms.ModelForm):
-    rating = forms.DecimalField(label="Rating")
+    rating = forms.DecimalField(label="Rating", widget=forms.HiddenInput)
 
     class Meta:
         model = Feedback
