@@ -10,7 +10,7 @@
     <h1>{{ object.title }}</h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
-    {% if user.is_authendicated and object.author.pk != user.pk and object.status != 'closed' %}
+    {% if user.is_authenticated and object.author.pk != user.pk and object.status != 'closed' %}
         <a class="btn btn-default" href={% url "barter:create_offer" object.pk user.pk %}>Reply with an offer</a>
         <br/>
     {% endif %}
