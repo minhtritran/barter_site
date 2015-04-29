@@ -1,5 +1,3 @@
-img.star {
-    width: 46px;
-    height: 44px;
-    background: url("stars.jpg") 0px 0px;
+.glyphicon {
+    font-size: 45px;
 }

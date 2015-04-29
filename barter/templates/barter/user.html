@@ -12,7 +12,10 @@
         <dt>Date of Birth</dt><dd>{{ object.date_of_birth }}</dd>
         <dt>Gender</dt><dd>{{ object.gender }}</dd>
     </dl>
-    <a class="btn btn-default" href="edit">Edit Profile</a>
+
+    {% if object == currentUser %}
+        <a class="btn btn-default" href="edit">Edit Profile</a>
+    {% endif %}
     <br />
     <a class="btn btn-default" href="feedback">Leave Feedback</a>
     <h1>Feedback Thread</h1>

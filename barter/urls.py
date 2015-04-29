@@ -19,10 +19,11 @@ urlpatterns = patterns(
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)$', views.create_offer, name='create_offer'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)/accept/$', views.accept_offer, name='accept_offer'),
     url(r'^favors/create/$', views.FavorCreate.as_view(), name='favor_create'),
-    url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
+    url(r'^favors/create/finish$', views.create_favor, name='favor_create_finish'),
     url(r'^tags/$', views.TagList.as_view(), name='tag_list'),
     url(r'^users/$', views.UserList.as_view(), name='user_list'),
     url(r'^users/(?P<pk>\d+)/$', views.UserDetail.as_view(), name='user_detail'),
-    url(r'^users/(?P<pk>\d+)/edit$', views.edit_user, name='user_list'),
+    url(r'^users/(?P<pk>\d+)/edit$', views.user_edit, name='user_edit'),
+    url(r'^users/(?P<pk>\d+)/edit/finish$', views.user_edit, name='user_edit_finish'),
     url(r'^users/(?P<pk>\d+)/feedback/$', views.create_feedback, name='feedback'),
 )
