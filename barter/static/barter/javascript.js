@@ -71,6 +71,8 @@ $(function(){
         });
 
     $('h2').on('click', function(){
+        $('span').toggleClass('glyphicon glyphicon-chevron-down');
+        $('span').toggleClass('glyphicon glyphicon-chevron-up');
         $('.password').slideToggle(300);
     });
 });
