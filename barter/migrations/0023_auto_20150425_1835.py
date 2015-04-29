@@ -12,20 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='agreement',
-            name='receiver',
-        ),
-        migrations.RemoveField(
-            model_name='agreement',
-            name='sender',
-        ),
-        migrations.AddField(
-            model_name='agreement',
-            name='accepter',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True),
-            preserve_default=True,
-        ),
         migrations.AlterField(
             model_name='agreement',
             name='favor',
