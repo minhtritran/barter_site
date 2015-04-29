@@ -117,6 +117,7 @@ def register(request):
     return render(request, 'registration/register.html', {"form": form})
 
 
+@login_required
 def edit_user(request, pk):
     form = UserChangeForm(initial={'email': request.user.email,
                                    'first_name': request.user.first_name,
@@ -126,6 +127,7 @@ def edit_user(request, pk):
     return render(request, 'barter/user_form.html', {"form": form})
 
 
+@login_required
 def create_favor(request):
     form = FavorForm(request.POST or None)
     if form.is_valid():
@@ -164,6 +166,7 @@ def create_offer(request, pk, trader_pk):
     return render(request, 'barter/offer_form.html', {"form": form, "thread": thread, "trader": trader, "author": author, "user": request.user})
 
 
+@login_required
 def create_feedback(request, pk):
     if request.user is pk:
         messages.error(request, 'You cannot give feedback to yourself.')
@@ -188,6 +191,7 @@ def custom_login(request):
         return login(request)
 
 
+@login_required
 def accept_offer(request, pk, trader_pk):
     if(request.POST['acceptbtn']):
         #Close favor post

@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 from barter import views
 from barter.views import custom_login
+from django.contrib.auth.decorators import login_required
 # from dajaxice.core import dajaxice_config
 # from dajaxice.core.Dajaxice import dajaxice_autodiscover
 # dajaxice_autodiscover()
@@ -18,7 +19,7 @@ urlpatterns = patterns(
     url(r'^favors/(?P<pk>\d+)/$', views.FavorDetail.as_view(), name='favor_detail'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)$', views.create_offer, name='create_offer'),
     url(r'^favors/(?P<pk>\d+)/offers/(?P<trader_pk>\d+)/accept/$', views.accept_offer, name='accept_offer'),
-    url(r'^favors/create/$', views.FavorCreate.as_view(), name='favor_create'),
+    url(r'^favors/create/$', login_required(views.FavorCreate.as_view()), name='favor_create'),
     url(r'^favors/create/finish$', views.create_favor, name='create_favor'),
     url(r'^tags/$', views.TagList.as_view(), name='tag_list'),
     url(r'^users/$', views.UserList.as_view(), name='user_list'),
