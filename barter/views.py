@@ -227,6 +227,7 @@ def accept_offer(request, pk, trader_pk):
         curMessage = Message(subject=curFavor.title, body="Favor agreement has been made. You may now initiate conversation with the other user.", moderation_status='a')
         curMessage.sender = User.objects.get(pk=trader_pk)
         curMessage.recipient = curFavor.author
+        curMessage.agreement = curAgreement
         curMessage.save()
         curMessage.thread = curMessage
         curMessage.save()
