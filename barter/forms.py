@@ -137,6 +137,14 @@ class FavorForm(forms.ModelForm):
         model = Favor
         fields = ['title', 'allow_offers', 'message']
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        tags = cleaned_data.get('tags')
+        if not tags.strip():
+            raise ValidationError('Please enter a valid tag.')
+
+        return cleaned_data
+
     def save(self, commit=True):
         favor = super(FavorForm, self).save(commit=False)
         if commit:
