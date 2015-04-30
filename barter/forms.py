@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
+from django.template.defaultfilters import slugify
 
 
 class UserCreationForm(forms.ModelForm):
@@ -140,8 +141,9 @@ class FavorForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         tags = cleaned_data.get('tags')
-        if not tags.strip():
-            raise ValidationError('Please enter a valid tag.')
+        for tag in tags:
+            if not slugify(tag).strip():
+                raise ValidationError('Invalid tag.')
 
         return cleaned_data
 
