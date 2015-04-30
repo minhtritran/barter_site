@@ -124,7 +124,7 @@ def register(request):
 
 @login_required
 def user_edit(request, pk):
-    if request.user.pk is not pk:
+    if int(request.user.pk) is not int(pk):
         messages.error(request, 'You cannot edit another user.')
         return redirect('/users/' + pk + '/')
     form = UserChangeForm(request.POST or None, initial={'email': request.user.email,
@@ -187,7 +187,7 @@ def create_offer(request, pk, trader_pk):
 
 @login_required
 def create_feedback(request, pk):
-    if request.user.pk is pk:
+    if int(request.user.pk) is int(pk):
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
     form = FeedbackForm(request.POST)

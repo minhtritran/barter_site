@@ -30,11 +30,7 @@
                             {{ feedback.sender }}
                             <br/>
                             {{ feedback.pub_date | date:"m/d/y h:i A" }}
-                        </dt>
-                        <dd>
-                            {{ feedback.message }}
-                        </dd>
-                        <dt>
+                            <br/>
                             {% for i in ratingSize %}
                                 {% if forloop.counter0 < feedback.rating %}
                                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
@@ -42,14 +38,17 @@
                                     <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
                                 {% endif %}
                             {% endfor %}
-                        </dt>
-                        {% if feedback.sender == currentUser %}
-                        <dt>
+                            {% if feedback.sender == currentUser %}
+                                <br/>
                             <div  class="btn btn-default">
                             edit
                             </div>
-                        </dt>
                         {% endif %}
+                        </dt>
+                        <dd>
+                            {{ feedback.message }}
+                        </dd>
+
                     </dl>
 
                 </div>
