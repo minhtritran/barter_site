@@ -9,7 +9,9 @@ from django.template.defaultfilters import slugify
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    date_of_birth = forms.DateField(label="Date Of Birth", widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+    date_of_birth = forms.DateField(label="Date Of Birth",
+                                    widget=forms.TextInput(
+                                        attrs={'autocomplete': 'off', 'placeholder': 'MM/DD/YYYY'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password Confirmation', widget=forms.PasswordInput)
 
@@ -130,7 +132,7 @@ class PasswordForm(forms.Form):
 class FavorForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={"autocomplete": 'off'}))
     tags = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'At least one tag',
+        attrs={'placeholder': 'At least one tag, separated by commas',
                'autocomplete': 'off',
                'onchange': 'Barter.examples.suggest_tags(Dajax.process, this.innerHTML)'}))
 

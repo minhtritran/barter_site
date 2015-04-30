@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block title %}Edit Profile {% endblock %}
 {% block content %}
     <h1>Edit Profile</h1>
     <hr/>
@@ -12,7 +13,8 @@
             <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
         </h2>
         <br/>
-        <div class="password" style="display: none;">{% bootstrap_form form2 %}</div>
+        <br/>
+        <div class="hiddenform">{% bootstrap_form form2 %}</div>
 
         {% buttons submit='Save' reset="Cancel" %}{% endbuttons %}
         <input type="hidden" name="next" value="{{ next }}" />

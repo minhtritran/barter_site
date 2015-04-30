@@ -1,3 +1,12 @@
 div.stars .glyphicon {
     font-size: 45px;
+    color:gold;
+}
+
+.glyphicon {
+    color:gold;
+}
+
+.hiddenform{
+    display:none;
 }

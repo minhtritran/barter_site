@@ -98,12 +98,15 @@ class UserDetail(DetailView):
     model = User
     template_name = "barter/user.html"
 
+
     def get_context_data(self, **kwargs):
         context = super(UserDetail, self).get_context_data(**kwargs)
         thread = Feedback.objects.filter(receiver=self.kwargs['pk']).order_by('pub_date')
 
         context['thread'] = thread
         context['currentUser'] = self.request.user
+        context['form'] = FeedbackForm(self.request.POST or None)
+        context['ratingSize'] = range(0, 5)
 
         return context
 
@@ -121,6 +124,9 @@ def register(request):
 
 @login_required
 def user_edit(request, pk):
+    if request.user.pk is not pk:
+        messages.error(request, 'You cannot edit another user.')
+        return redirect('/users/' + pk + '/')
     form = UserChangeForm(request.POST or None, initial={'email': request.user.email,
                                                          'first_name': request.user.first_name,
                                                          'last_name': request.user.last_name,
@@ -184,8 +190,7 @@ def create_feedback(request, pk):
     if request.user.pk is pk:
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
-    thread = Feedback.objects.filter(receiver=pk).order_by('pub_date')
-    form = FeedbackForm(request.POST or None)
+    form = FeedbackForm(request.POST)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.sender = request.user
@@ -194,7 +199,7 @@ def create_feedback(request, pk):
         obj.save()
         messages.success(request, 'Feedback has been submitted.')
         return redirect('/users/' + obj.receiver_id + '/')
-    return render(request, 'barter/feedback_form.html', {"form": form, "thread": thread})
+    return HttpResponseRedirect("/")
 
 
 def custom_login(request):

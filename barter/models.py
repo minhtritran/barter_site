@@ -74,7 +74,7 @@ class User(AbstractBaseUser):
             return self.first_name
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.email
+        return self.get_full_name()
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -94,10 +94,12 @@ class User(AbstractBaseUser):
 
     def rating(self):
         r = 0
-        fb = self.get_feedback()
+        fb = Feedback.objects.filter(receiver=self.pk)
+        if len(fb) is 0:
+            return None
         for num in fb:
             r += num.rating
-        return '{0:.2g}'.format(r / fb.__len__())
+        return '{0:.2g}'.format(r / len(fb))
 
 
 class Tag(models.Model):
@@ -110,7 +112,7 @@ class Tag(models.Model):
 class Post(models.Model):
     last_edit = models.DateTimeField('Last Edit', null=True)
     pub_date = models.DateTimeField('Date Published', null=True, blank=True, auto_now_add=True)
-    message = models.TextField(max_length=500, default='')
+    message = models.TextField(max_length=1500, default='')
 
     def edit(self, m):
         self.message = m
@@ -131,7 +133,7 @@ class Feedback(Post):
 
 
 class Favor(Post):
-    title = models.CharField(max_length=32, default='')
+    title = models.CharField(max_length=100, default='')
     author = models.ForeignKey(User, related_name='favors_authored')
     completed_by = models.ForeignKey(User, related_name='favors_completed', null=True, default=None)
     tags = models.ManyToManyField(Tag)
