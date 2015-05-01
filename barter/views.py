@@ -11,6 +11,7 @@ from postman.models import Message
 from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm, PasswordForm
 from django.db import connection
 from django.template.defaultfilters import slugify
+from django.db.models import Count
 
 
 # Create your views here.
@@ -83,15 +84,15 @@ class FavorCreate(CreateView):
 
 
 class TagList(ListView):
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.all().annotate(num_favors=Count('favor')).order_by('-num_favors')
     template_name = "barter/tag_list.html"
-    paginate_by = 10
+    paginate_by = 20
 
 
 class UserList(ListView):
     queryset = User.objects.all()
     template_name = "barter/user_list.html"
-    paginate_by = 10
+    paginate_by = 20
 
 
 class UserDetail(DetailView):

@@ -33,7 +33,7 @@
                     <li><a>{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
                     {% if page_obj.has_next %}
                         <li>
-                            <a href="/favors?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

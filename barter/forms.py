@@ -142,8 +142,11 @@ class FavorForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        tags = cleaned_data.get('tags')
+        tags = cleaned_data.get('tags').split(',')
         for tag in tags:
+            print("tag: " + tag)
+            print("slugify(tag): " + slugify(tag))
+            print("slugify(tag).strip(): " + slugify(tag).strip())
             if not slugify(tag).strip():
                 raise ValidationError('Invalid tag.')
 
