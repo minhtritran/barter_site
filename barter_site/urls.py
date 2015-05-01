@@ -7,4 +7,5 @@ urlpatterns = patterns(
     url(r'^', include('barter.urls', namespace='barter')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^messages/', include('postman.urls')),
+    url(r'^favors/search/', include('haystack.urls')),
 )

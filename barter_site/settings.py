@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'barter',
     'postman',
+    'haystack',
 )
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
@@ -132,3 +133,10 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'dajaxice.finders.DajaxiceFinder',
 )
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
