@@ -127,19 +127,17 @@ def user_edit(request, pk):
     if int(request.user.pk) is not int(pk):
         messages.error(request, 'You cannot edit another user.')
         return redirect('/users/' + pk + '/')
-    form = UserChangeForm(request.POST or None, initial={'email': request.user.email,
-                                                         'first_name': request.user.first_name,
-                                                         'last_name': request.user.last_name,
-                                                         'date_of_birth': request.user.date_of_birth,
-                                                         'gender': request.user.gender})
+    user = User.objects.get(pk=pk)
+    form = UserChangeForm(request.POST or None, instance=user)
     form2 = PasswordForm(request.POST or None)
 
     if form.is_valid() or form2.is_valid():
-        user = User.objects.get(pk=pk)
-        obj = UserCreationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
         if form2.is_valid():
-            obj.setPassword(form2.password1)
-        obj.save()
+            user.setPassword(form2.password1)
+            form2.save()
+
         messages.success(request, 'User profile successfully updated.')
         return HttpResponseRedirect("/")
 
