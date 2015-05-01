@@ -64,7 +64,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'date_of_birth', 'gender')
+        fields = ('first_name', 'last_name', 'date_of_birth', 'gender')
 
     # def clean(self):
     #     # run the standard clean method first
@@ -78,14 +78,14 @@ class UserChangeForm(forms.ModelForm):
     #
     #     # always return the cleaned data
     #     return cleaned_data
-
+    '''
     def clean_email(self):
         # check if email is a .edu email
         email_domain = self.cleaned_data['email'].split('.')[-1]
         if email_domain != 'edu':
             raise forms.ValidationError("You must register with an edu email address.")
         return self.cleaned_data['email']
-
+    '''
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
         # This is done here, rather than on the field, because the
