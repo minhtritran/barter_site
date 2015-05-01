@@ -36,12 +36,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dajax',
-    'dajaxice',
     'bootstrap3',
     'barter',
     'postman',
     'haystack',
+    'django_ajax',
 )
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
@@ -128,26 +127,9 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.eggs.Loader',
 )
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'dajaxice.finders.DajaxiceFinder',
-)
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
-)
