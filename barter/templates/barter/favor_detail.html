@@ -13,6 +13,9 @@
     {% if user.is_authenticated and object.author.pk != user.pk and object.status != 'closed' %}
         <a class="btn btn-default" href={% url "barter:create_offer" object.pk user.pk %}>Reply with an offer</a>
         <br/>
+    {% elif not user.is_authenticated %}
+        <a class="btn btn-default" href="{% url "barter:login" %}?next={% url "barter:favor_detail" object.pk %}">Log in to reply with an offer</a>
+        <br/>
     {% endif %}
     <br/>
     {% if object.offers.count > 0 %}

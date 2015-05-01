@@ -3,6 +3,7 @@
 
 {% block content %}
     <h1>Login</h1>
+    <hr/>
     <form method="post" action="{% url 'barter:login' %}" class="form-inline">
         {% csrf_token %}
         {% bootstrap_form form layout='inline' %}

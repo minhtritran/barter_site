@@ -5,5 +5,14 @@
 {% block content %}
     <h1>Home</h1>
     <hr/>
-    <div>Hello {{ user }}.  Last logged in at {{ user.last_login }}</div>
+    <p>
+	    {% if user.is_authenticated %}
+	    	Hello {{ user }}.  Last logged in at {{ user.last_login }}
+	    {% else %}
+	    	Welcome to Barter!
+	    {% endif %}
+	</p>
+	<h4>About Us</h4>
+	<p>Barter is made to allow people to conduct trade the old fashioned way, through favors and non-monetary items, while still providing a modern platform to do so.</p>
+	<p>Our development team consists of Minhtri Tran, Andy Tang, Wilson Li, and Alyssa Lui.</p>
 {% endblock %}

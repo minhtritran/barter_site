@@ -15,7 +15,6 @@ from django.db.models import Count
 
 
 # Create your views here.
-@login_required
 def home(request):
     return render(request, 'barter/index.html', {})
 
