@@ -10,3 +10,8 @@ div.stars .glyphicon {
 .hiddenform{
     display:none;
 }
+
+body {
+	background-image: url("cream_dust.png");
+    background-repeat: repeat;
+}

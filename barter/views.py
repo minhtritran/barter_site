@@ -86,13 +86,13 @@ class FavorCreate(CreateView):
 class TagList(ListView):
     queryset = Tag.objects.all().annotate(num_favors=Count('favor')).order_by('-num_favors')
     template_name = "barter/tag_list.html"
-    paginate_by = 20
+    paginate_by = 25
 
 
 class UserList(ListView):
     queryset = User.objects.all()
     template_name = "barter/user_list.html"
-    paginate_by = 20
+    paginate_by = 25
 
 
 class UserDetail(DetailView):

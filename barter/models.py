@@ -149,6 +149,9 @@ class Favor(Post):
     def removeCurUserOffers(self):
         self.offers.filter(trader=request.user).delete()
 
+    class Meta:
+        ordering = ["-pub_date"]
+
 
 class OfferQuerySet(models.QuerySet):
     def by_favor_trader(self, favor_pk, trader_pk):
