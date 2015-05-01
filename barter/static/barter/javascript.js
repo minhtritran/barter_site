@@ -46,12 +46,13 @@ $(function(){
         $('.hiddenform').slideToggle(300);
     });
 
-    $('#id_tags').keydown(function() {
-        ajaxPost('update',{'input': $(this)[0].value},
-        function(content){
-            $('#suggestions').text(content['msg']);
-        },
-        true);
+    $('#id_tags').on('input',function() {
+        if($(this)[0].value != '')
+            ajaxPost('update',{'input': $(this)[0].value},
+            function(content){
+                $('#suggestions').text(content['msg']);
+            }, true);
+        else $('#suggestions').text('');
     });
 
 });

@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'barter',
     'postman',
     'haystack',
-    'django_ajax',
 )
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False

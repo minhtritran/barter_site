@@ -188,7 +188,7 @@ def create_feedback(request, pk):
     if int(request.user.pk) is int(pk):
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
-    form = FeedbackForm(request.POST)
+    form = FeedbackForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.sender = request.user
@@ -197,7 +197,7 @@ def create_feedback(request, pk):
         obj.save()
         messages.success(request, 'Feedback has been submitted.')
         return redirect('/users/' + obj.receiver_id + '/')
-    return HttpResponseRedirect("/")
+    return render(request, 'barter/feedback_form.html', {"form": form})
 
 
 def custom_login(request):
