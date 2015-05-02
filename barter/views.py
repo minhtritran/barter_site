@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Feedback, Favor, Offer, Agreement, Tag
 from postman.models import Message
-from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm, PasswordForm
+from .forms import UserCreationForm, UserChangeForm, FavorForm, OfferForm, FeedbackForm, PasswordForm, FavorEditForm
 from django.db import connection
 from django.template.defaultfilters import slugify
 from django.db.models import Count
@@ -135,6 +135,27 @@ def user_edit(request, pk):
         return HttpResponseRedirect("/")
 
     return render(request, 'barter/user_form.html', {"form": form, "form2": form2})
+
+
+@login_required
+def favor_edit(request, pk):
+    favor = Favor.objects.get(pk=pk)
+    form = FavorEditForm(request.POST or None, initial={'title': favor.title, 'message': favor.message})
+    if form.is_valid():
+        favor.title = form.cleaned_data['title']
+        favor.message = form.cleaned_data['message']
+        favor.save()
+        messages.success(request, 'Favor successfully updated.')
+        return HttpResponseRedirect("/favors/" + pk)
+    return render(request, 'barter/favor_edit.html', {"form": form, "favor_pk": pk})
+
+
+@login_required
+def favor_delete(request, pk):
+    favor = Favor.objects.get(pk=pk)
+    favor.delete()
+    messages.success(request, 'Favor deleted.')
+    return HttpResponseRedirect("/favors/")
 
 
 @login_required

@@ -7,7 +7,12 @@
     {% if object.status == 'closed' %}
         <div class="alert alert-warning" role="alert">This favor has been closed.</div>
     {% endif %}
-    <h1>{{ object.title }}</h1>
+    <h1>
+        {{ object.title }}
+        {% if object.author.pk = user.pk%}
+            <a class="btn btn-default" href={% url "barter:favor_edit" object.pk %}>Edit</a>
+        {% endif %}
+    </h1>
     <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
     {% if user.is_authenticated and object.author.pk != user.pk and object.status != 'closed' %}

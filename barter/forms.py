@@ -154,6 +154,26 @@ class FavorForm(forms.ModelForm):
         return favor
 
 
+class FavorEditForm(forms.ModelForm):
+    class Meta:
+        model = Favor
+        fields = ('title', 'message')
+
+    def clean_title(self):
+        if not self.cleaned_data['title'].strip():
+            raise ValidationError('Blank title field.')
+        return self.cleaned_data['title']
+
+    def clean_message(self):
+        if not self.cleaned_data['message'].strip():
+            raise ValidationError('Blank message field.')
+        return self.cleaned_data['message']
+
+    def clean(self):
+        cleaned_data = super(FavorEditForm, self).clean()
+        return cleaned_data
+
+
 class OfferForm(forms.ModelForm):
     class Meta:
         model = Offer
