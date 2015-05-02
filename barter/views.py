@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.views import login
+from django.utils import timezone
 from django.db.models import Max
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.views.generic import DetailView, ListView
@@ -184,18 +185,24 @@ def create_offer(request, pk, trader_pk):
 
 
 @login_required
-def create_feedback(request, pk):
+def create_feedback(request, pk, pk2=0):
     if request.session.get('user-feedback') != int(pk):
         return redirect('/home/')
     if int(request.user.pk) is int(pk):
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
-    form = FeedbackForm(request.POST or None)
+    if pk2 != 0:
+        feedback = Feedback.objects.get(pk=pk2)
+        form = FeedbackForm(request.POST or None, instance=feedback)
+    else:
+        form = FeedbackForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.sender = request.user
         obj.rating = request.POST['rating']
         obj.receiver = User(pk=pk)
+        if pk2 != 0:
+            obj.last_edit = timezone.now()
         obj.save()
         messages.success(request, 'Feedback has been submitted.')
         request.session['user-feedback'] = None

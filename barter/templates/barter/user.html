@@ -42,9 +42,9 @@
                             {% endfor %}
                             {% if feedback.sender == currentUser %}
                                 <br/>
-                            <div  class="btn btn-default">
+                            <a  class="btn btn-default" href="{% url 'barter:feedback_edit' object.pk forloop.counter %}">
                             edit
-                            </div>
+                            </a>
                         {% endif %}
                         </dt>
                         <dd>

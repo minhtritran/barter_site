@@ -30,4 +30,5 @@ urlpatterns = patterns(
     url(r'^users/(?P<pk>\d+)/edit$', views.user_edit, name='user_edit'),
     url(r'^users/(?P<pk>\d+)/edit/finish$', views.user_edit, name='user_edit_finish'),
     url(r'^users/(?P<pk>\d+)/feedback/$', views.create_feedback, name='feedback'),
+    url(r'^users/(?P<pk>\d+)/feedback/edit/(?P<pk2>\d+)$', views.create_feedback, name='feedback_edit'),
 )
