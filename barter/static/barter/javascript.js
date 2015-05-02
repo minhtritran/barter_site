@@ -48,6 +48,7 @@ $(function(){
 
     $('#id_tags_input').on('input',function() {
         var text = $(this)[0].value;
+        text = text.replace(/ /g, '-')
         var current_tags = $('#id_tags')[0];
         if(text.length != ''){
             var input = text.substr(0, text.length - 1);

@@ -145,13 +145,14 @@ def create_favor(request):
         obj.author = request.user
         obj.save()
         for tag in request.POST['tags'].split(','):
-            tag = slugify(tag)
-            try:
-                t = Tag.objects.get(slug=tag)
-            except Tag.DoesNotExist:
-                t = Tag(slug=tag)
-                t.save()
-            obj.tags.add(Tag.objects.get(slug=tag))
+            if tag is not '':
+                tag = slugify(tag)
+                try:
+                    t = Tag.objects.get(slug=tag)
+                except Tag.DoesNotExist:
+                    t = Tag(slug=tag)
+                    t.save()
+                obj.tags.add(Tag.objects.get(slug=tag))
         form.save_m2m()
         messages.success(request, 'Favor has been created.')
         return HttpResponseRedirect("/")

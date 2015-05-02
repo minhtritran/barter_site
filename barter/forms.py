@@ -142,6 +142,11 @@ class FavorForm(forms.ModelForm):
     #
     #     return cleaned_data
 
+    # def clean_tags(self):
+    #     tags = self.cleaned_data['tags']
+    #     if tags is '':
+    #         raise ValidationError("The tag field is empty.")
+
     def save(self, commit=True):
         favor = super(FavorForm, self).save(commit=False)
         if commit:
