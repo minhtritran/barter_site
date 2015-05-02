@@ -48,13 +48,22 @@ $(function(){
 
     $('#id_tags_input').on('input',function() {
         var text = $(this)[0].value;
-        if(text != ''){
+        if(text.length != ''){
+            var input = text.substr(0, text.length - 1);
+            if($.inArray(text, [' ', ';', ',']) >= 0 ){
+                $(this)[0].value = '';
+                return;
+            }
             if($.inArray(text.substr(text.length - 1), [' ', ';', ',']) >= 0){
                 tag = document.createElement("div");
                 tag.className = "btn btn-info";
-                tag.innerText = text.substr(0,text.length - 1);
+                tag.innerText = input;
+                tag.onclick = remove_tag;
                 $('#current_tags')[0].appendChild(tag);
-                $('#id_tags')[0].value += text + ',';
+                if(text.substr(text.length - 1) == ',')
+                    $('#id_tags')[0].value += text;
+                else
+                    $('#id_tags')[0].value += text + ',';
                 $(this)[0].value = '';
             }
             else
@@ -65,6 +74,13 @@ $(function(){
         }
          else $('#suggestions').text('');
     });
+
+    function remove_tag(){
+
+        this.remove();
+        cut = $('#id_tags')[0].value.split(this.innerText + ',');
+        $('#id_tags')[0].value = cut[0] + cut[1];
+    };
 
     $('.progress-bar').each(function() {
       var min = $(this).attr('aria-valuemin');

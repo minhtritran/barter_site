@@ -131,7 +131,7 @@ class PasswordForm(forms.Form):
 
 class FavorForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={"autocomplete": 'off'}))
-    tags = forms.CharField(label='Tags', widget=forms.HiddenInput)
+    tags = forms.CharField(label='Tags', widget=forms.HiddenInput, required=True)
 
     class Meta:
         model = Favor

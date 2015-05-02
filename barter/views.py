@@ -174,7 +174,6 @@ def create_favor(request):
         form.save_m2m()
         messages.success(request, 'Favor has been created.')
         return HttpResponseRedirect("/")
-    messages.error(request, 'The form is incomplete.')
     return render(request, 'barter/favor_form.html', {"form": form})
 
 
