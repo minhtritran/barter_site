@@ -141,15 +141,14 @@ def user_edit(request, pk):
                                                                         'last_name': request.user.last_name,
                                                                         'date_of_birth': request.user.date_of_birth,
                                                                         'gender': request.user.gender})
-    form2 = PasswordForm(request.POST or None)
+    form2 = PasswordForm(request.user, request.POST or None)
 
-    if form.is_valid() or form2.is_valid():
-        if form.is_valid():
-            form.save()
-        if form2.is_valid():
-            user.setPassword(form2.password1)
-            form2.save()
-
+    if form.is_valid():
+        form.save()
+    if form2.is_valid():
+        user.set_password(form2.cleaned_data['password1'])
+        user.save()
+    if form.is_valid() and (not form2.has_changed() or form2.is_valid()):
         messages.success(request, 'User profile successfully updated.')
         return HttpResponseRedirect("/")
 
