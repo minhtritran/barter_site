@@ -418,7 +418,7 @@ class UpdateMessageMixin(object):
                 curAgreement.save()
 
             messages.success(request, self.success_msg, fail_silently=True)
-            #return redirect(request.GET.get('next') or self.success_url or next_url)
+            request.session['user-feedback'] = finalMessage.recipient.pk
             return HttpResponseRedirect("/users/" + str(finalMessage.recipient.pk) + "/feedback/")
         else:
             messages.warning(request, _("Select at least one object."), fail_silently=True)
