@@ -46,13 +46,24 @@ $(function(){
         $('.hiddenform').slideToggle(300);
     });
 
-    $('#id_tags').on('input',function() {
-        if($(this)[0].value != '')
-            ajaxPost('update',{'input': $(this)[0].value},
-            function(content){
-                $('#suggestions').text(content['msg']);
-            }, true);
-        else $('#suggestions').text('');
+    $('#id_tags_input').on('input',function() {
+        var text = $(this)[0].value;
+        if(text != ''){
+            if($.inArray(text.substr(text.length - 1), [' ', ';', ',']) >= 0){
+                tag = document.createElement("div");
+                tag.className = "btn btn-default";
+                tag.innerText = text.substr(0,text.length - 1);
+                $('#current_tags')[0].appendChild(tag);
+                $('#id_tags').append(text);
+                $(this)[0].value = '';
+            }
+            else
+                ajaxPost('update',{'input': text},
+                function(content){
+                    $('#suggestions').text(content['msg']);
+                }, true);
+        }
+         else $('#suggestions').text('');
     });
 
 });

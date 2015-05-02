@@ -131,10 +131,7 @@ class PasswordForm(forms.Form):
 
 class FavorForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={"autocomplete": 'off'}))
-    tags = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'At least one tag, separated by commas',
-               'autocomplete': 'off',
-               'onchange': 'Barter.examples.suggest_tags(Dajax.process, this.innerHTML)'}))
+    tags = forms.CharField(label='Tags', widget=forms.HiddenInput)
 
     class Meta:
         model = Favor
