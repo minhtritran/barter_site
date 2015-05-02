@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'barter',
     'postman',
     'haystack',
+    'simple_email_confirmation',
 )
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
@@ -132,3 +133,10 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'barter.help.service@gmail.com'
+EMAIL_HOST_PASSWORD = 'passwordise'
+EMAIL_PORT = 587
