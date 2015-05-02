@@ -52,12 +52,12 @@ $(function(){
         if(text.length != ''){
             var input = text.substr(0, text.length - 1);
 
-            if($.inArray(text, [' ', ';', ',']) >= 0 ){
+            if($.inArray(text, [';', ',']) >= 0 ){
                 $(this)[0].value = '';
                 return;
             }
 
-            if($.inArray(text.substr(text.length - 1), [' ', ';', ',']) >= 0){
+            if($.inArray(text.substr(text.length - 1), [';', ',']) >= 0){
                 if($.inArray(input, current_tags.value.split(',')) > 0){
                     $(this)[0].value = '';
                     return;

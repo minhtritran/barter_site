@@ -142,7 +142,7 @@ def create_favor(request):
     form = FavorForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
-        # obj.author = request.user
+        obj.author = request.user
         obj.save()
         for tag in request.POST['tags'].split(','):
             tag = slugify(tag)
