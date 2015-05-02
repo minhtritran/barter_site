@@ -186,8 +186,6 @@ def create_offer(request, pk, trader_pk):
 
 @login_required
 def create_feedback(request, pk, pk2=0):
-    if request.session.get('user-feedback') != int(pk):
-        return redirect('/home/')
     if int(request.user.pk) is int(pk):
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
@@ -195,6 +193,8 @@ def create_feedback(request, pk, pk2=0):
         feedback = Feedback.objects.get(pk=pk2)
         form = FeedbackForm(request.POST or None, instance=feedback)
     else:
+        if request.session.get('user-feedback') != int(pk):
+            return redirect('/home/')
         form = FeedbackForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
