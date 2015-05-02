@@ -14,6 +14,7 @@ from django.db import connection
 from django.template.defaultfilters import slugify
 from django.db.models import Count
 
+
 # Create your views here.
 def about(request):
     return render(request, 'barter/index.html', {})
@@ -43,8 +44,9 @@ class FavorDetail(DetailView):
     template_name = "barter/favor_detail.html"
 
     def get_context_data(self, **kwargs):
-        if not self.request.user.is_confirmed:
-            messages.warning(self.request, 'To reply, please verify your email.')
+        if self.request.user.is_authenticated():
+            if not self.request.user.is_confirmed:
+                messages.warning(self.request, 'To reply, please verify your email.')
 
         context = super(FavorDetail, self).get_context_data(**kwargs)
         listOffers = []
