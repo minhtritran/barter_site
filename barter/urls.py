@@ -14,7 +14,7 @@ urlpatterns = patterns(
     url('^login/', custom_login, name="login"),
     url('^register/', views.register, name='register'),
     url(r'^$', views.FavorList.as_view()),
-    url(r'^home/$', views.home, name='home'),
+    url(r'^about/$', views.about, name='about'),
     url(r'^favors/$', views.FavorList.as_view(), name='favor_list'),
     url(r'^favors/tag/(?P<slug>[-\w\d]+)/$', views.FavorList.as_view(), name='favor_list_tagged'),
     url(r'^favors/user/(?P<user_pk>\d+)/$', views.FavorList.as_view(), name='favor_list_user'),
