@@ -137,7 +137,10 @@ def user_edit(request, pk):
         messages.error(request, 'You cannot edit another user.')
         return redirect('/users/' + pk + '/')
     user = User.objects.get(pk=pk)
-    form = UserChangeForm(request.POST or None, instance=user)
+    form = UserChangeForm(request.POST or None, instance=user, initial={'first_name': request.user.first_name,
+                                                                        'last_name': request.user.last_name,
+                                                                        'date_of_birth': request.user.date_of_birth,
+                                                                        'gender': request.user.gender})
     form2 = PasswordForm(request.POST or None)
 
     if form.is_valid() or form2.is_valid():
