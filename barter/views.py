@@ -68,21 +68,6 @@ class FavorDetail(DetailView):
     """
 
 
-class FavorCreate(CreateView):
-    model = Favor
-    template_name = "barter/favor_form.html"
-    form_class = FavorForm
-
-    def get_initial(self):
-        # Get the initial dictionary from the superclass method
-        initial = super(FavorCreate, self).get_initial()
-        # Copy the dictionary so we don't accidentally change a mutable dict
-        initial = initial.copy()
-        initial['author'] = self.request.user.pk
-        # etc...
-        return initial
-
-
 class TagList(ListView):
     queryset = Tag.objects.all().annotate(num_favors=Count('favor')).order_by('-num_favors')
     template_name = "barter/tag_list.html"
@@ -157,7 +142,7 @@ def create_favor(request):
     form = FavorForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
-        obj.author = request.user
+        # obj.author = request.user
         obj.save()
         for tag in request.POST['tags'].split(','):
             tag = slugify(tag)

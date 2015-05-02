@@ -1,6 +1,6 @@
 $(function(){
-    $rating = 0;
-    $id = 0;
+    var $rating = 0;
+    var $id = 0;
 
     $('.stars span').hover(
         function () {
@@ -48,38 +48,68 @@ $(function(){
 
     $('#id_tags_input').on('input',function() {
         var text = $(this)[0].value;
+        var current_tags = $('#id_tags')[0];
         if(text.length != ''){
             var input = text.substr(0, text.length - 1);
+
             if($.inArray(text, [' ', ';', ',']) >= 0 ){
                 $(this)[0].value = '';
                 return;
             }
+
             if($.inArray(text.substr(text.length - 1), [' ', ';', ',']) >= 0){
-                tag = document.createElement("div");
-                tag.className = "btn btn-info";
-                tag.innerText = input;
-                tag.onclick = remove_tag;
-                $('#current_tags')[0].appendChild(tag);
+                if($.inArray(input, current_tags.value.split(',')) > 0){
+                    $(this)[0].value = '';
+                    return;
+                }
+                create_tag(input);
                 if(text.substr(text.length - 1) == ',')
-                    $('#id_tags')[0].value += text;
+                    current_tags.value += text;
                 else
-                    $('#id_tags')[0].value += text + ',';
+                    current_tags.value += text + ',';
                 $(this)[0].value = '';
             }
             else
                 ajaxPost('update',{'input': text},
                 function(content){
-                    $('#suggestions').text(content['msg']);
+                    var ele = $('#suggestions')[0];
+                    var suggestions = content['msg'];
+                    $('#suggestions').empty();
+                    for (var i = 0; i < suggestions.length; ++i) {
+                        if($.inArray(suggestions[i], current_tags.value.split(',')) < 0) {
+                            var link = document.createElement("span");
+                            link.className = "btn btn-link";
+                            link.innerText = suggestions[i];
+                            link.onclick = add_tag;
+
+                            ele.appendChild(link);
+                        }
+                    }
                 }, true);
         }
          else $('#suggestions').text('');
     });
 
-    function remove_tag(){
+    function create_tag(label){
+        var tag = document.createElement("div");
+        tag.className = "btn btn-info";
+        tag.innerText = label;
+        tag.onclick = remove_tag;
+        $('#current_tags')[0].appendChild(tag);
+    }
 
+    function add_tag(){
+        $('#id_tags')[0].value += this.innerText + ',';
+        create_tag(this.innerText);
+        $('#suggestions').text('');
+        $('#id_tags_input')[0].value = '';
         this.remove();
-        cut = $('#id_tags')[0].value.split(this.innerText + ',');
+    }
+
+    function remove_tag(){
+        var cut = $('#id_tags')[0].value.split(this.innerText + ',');
         $('#id_tags')[0].value = cut[0] + cut[1];
+        this.remove();
     };
 
     $('.progress-bar').each(function() {

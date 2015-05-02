@@ -130,17 +130,17 @@ class FavorForm(forms.ModelForm):
         model = Favor
         fields = ['title', 'allow_offers', 'message']
 
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        tags = cleaned_data.get('tags').split(',')
-        for tag in tags:
-            print("tag: " + tag)
-            print("slugify(tag): " + slugify(tag))
-            print("slugify(tag).strip(): " + slugify(tag).strip())
-            if not slugify(tag).strip():
-                raise ValidationError('Invalid tag.')
-
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = self.cleaned_data
+    #     tags = cleaned_data.get('tags').split(',')
+    #     for tag in tags:
+    #         print("tag: " + tag)
+    #         print("slugify(tag): " + slugify(tag))
+    #         print("slugify(tag).strip(): " + slugify(tag).strip())
+    #         if not slugify(tag).strip():
+    #             raise ValidationError('Invalid tag.')
+    #
+    #     return cleaned_data
 
     def save(self, commit=True):
         favor = super(FavorForm, self).save(commit=False)
