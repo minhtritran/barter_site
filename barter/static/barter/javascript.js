@@ -51,10 +51,10 @@ $(function(){
         if(text != ''){
             if($.inArray(text.substr(text.length - 1), [' ', ';', ',']) >= 0){
                 tag = document.createElement("div");
-                tag.className = "btn btn-default";
+                tag.className = "btn btn-info";
                 tag.innerText = text.substr(0,text.length - 1);
                 $('#current_tags')[0].appendChild(tag);
-                $('#id_tags').append(text);
+                $('#id_tags')[0].value += text + ',';
                 $(this)[0].value = '';
             }
             else
