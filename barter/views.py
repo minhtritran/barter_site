@@ -14,7 +14,6 @@ from django.db import connection
 from django.template.defaultfilters import slugify
 from django.db.models import Count
 
-
 # Create your views here.
 def about(request):
     return render(request, 'barter/index.html', {})
@@ -44,6 +43,9 @@ class FavorDetail(DetailView):
     template_name = "barter/favor_detail.html"
 
     def get_context_data(self, **kwargs):
+        if not self.request.user.is_confirmed:
+            messages.warning(self.request, 'To reply, please verify your email.')
+
         context = super(FavorDetail, self).get_context_data(**kwargs)
         listOffers = []
 
@@ -57,15 +59,8 @@ class FavorDetail(DetailView):
             offers = Favor.objects.raw('SELECT * FROM barter_favor INNER JOIN barter_offer ON (barter_favor.id = barter_offer.favor_id) INNER JOIN barter_user ON (barter_offer.trader_id = barter_user.id) WHERE barter_favor.id = %s AND trader_id = %s ORDER BY barter_offer.pub_date DESC', [self.kwargs['pk'], row[0]])[0]
             listOffers.append(offers)
         context['offer_threads'] = listOffers
+
         return context
-
-    """
-    def post(self, request, *args, **kwargs):
-        context = super(FavorDetail, self).get_context_data(**kwargs)
-        print(request.POST["trader"])
-
-        return self.render_to_response(context)
-    """
 
 
 class TagList(ListView):
@@ -106,11 +101,32 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            user.send_confirmation_email(request)
+            messages.success(request, 'Registration successful!  An email has been sent to you for verification.')
             return HttpResponseRedirect("/")
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {"form": form})
+
+
+@login_required
+def user_verify(request, pk, key):
+    user = User.objects.get(pk=pk)
+    user.confirm_email(key)
+    messages.success(request, 'Your email has been verified!')
+    return HttpResponseRedirect("/")
+
+
+@login_required
+def user_verify_resend(request, pk):
+    if int(request.user.pk) is not int(pk):
+        messages.error(request, 'You do not have permission to do that.')
+        return redirect('/users/' + pk + '/')
+    user = User.objects.get(pk=pk)
+    user.send_confirmation_email(request)
+    messages.success(request, 'An email has been sent to you for verification.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -166,6 +182,8 @@ def favor_delete(request, pk):
 
 @login_required
 def create_favor(request):
+    if not request.user.is_confirmed:
+        messages.warning(request, 'Please verify your email.')
     form = FavorForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)

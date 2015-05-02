@@ -18,15 +18,17 @@
             </div>
         {% endfor %}
     </div>
-    {% if user.pk == author or user.pk = trader %}
-        <hr/>
-        <form method="post" action="">
-            {% csrf_token %}
-            {% bootstrap_form form %}
+    {% if user.is_confirmed%}
+        {% if user.pk == author or user.pk = trader %}
+            <hr/>
+            <form method="post" action="">
+                {% csrf_token %}
+                {% bootstrap_form form %}
 
-            {% block button %}
-                {% buttons submit="Reply with offer" %}{% endbuttons %}
-            {% endblock %}
-        </form>
+                {% block button %}
+                    {% buttons submit="Reply with offer" %}{% endbuttons %}
+                {% endblock %}
+            </form>
+        {% endif %}
     {% endif %}
 {% endblock %}

@@ -13,7 +13,24 @@
     <div class="col-md-5">
     <h3>Information</h3><hr/>
         <dl class="dl-horizontal">
-            <dt>Email</dt><dd>{{ object.email }}</dd>
+            <dt>Email</dt>
+            <dd>
+                {{ object.email }}
+                <small>
+                    (
+                    {% if object.is_confirmed %}
+                        <span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span> verified
+                    {% else %}
+                        <span class="glyphicon glyphicon-minus" style="color:red" aria-hidden="true"></span>
+                        {% if object.pk == currentUser.pk %}
+                            <a href={% url "barter:user_verify_resend" object.pk %}>not verified</a>
+                        {% else %}
+                            not verified
+                        {% endif %}
+                    {% endif %}
+                    )
+                </small>
+            </dd>
             <dt>First Name</dt><dd>{{ object.first_name }}</dd>
             <dt>Last Name</dt><dd>{{ object.last_name }}</dd>
             <dt>Date of Birth</dt><dd>{{ object.date_of_birth }}</dd>

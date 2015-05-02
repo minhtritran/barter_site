@@ -3,6 +3,9 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from simple_email_confirmation import SimpleEmailConfirmationUserMixin
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your models here.
@@ -34,7 +37,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(SimpleEmailConfirmationUserMixin, AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -100,6 +103,13 @@ class User(AbstractBaseUser):
         for num in fb:
             r += num.rating
         return '{0:.2g}'.format(r / len(fb))
+
+    def send_confirmation_email(self, request):
+        subject = 'Barter User Verification'
+        message = 'To verify, please visit the following link: http://%s/users/%s/verify/%s' % (request.META['HTTP_HOST'], self.pk, self.confirmation_key)
+        from_email = settings.EMAIL_HOST_USER
+        to_email = [self.email]
+        send_mail(subject, message, from_email, to_email, False, settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
 
 
 class Tag(models.Model):
