@@ -104,10 +104,18 @@ class UserDetail(DetailView):
         context = super(UserDetail, self).get_context_data(**kwargs)
         thread = Feedback.objects.filter(receiver=self.kwargs['pk']).order_by('pub_date')
 
+        stars1 = len(Feedback.objects.filter(rating=1))
+        stars2 = len(Feedback.objects.filter(rating=2))
+        stars3 = len(Feedback.objects.filter(rating=3))
+        stars4 = len(Feedback.objects.filter(rating=4))
+        stars5 = len(Feedback.objects.filter(rating=5))
+
         context['thread'] = thread
         context['currentUser'] = self.request.user
         context['form'] = FeedbackForm(self.request.POST or None)
-        context['ratingSize'] = range(0, 5)
+        context['max'] = max(stars1, stars2, stars3, stars4, stars5)
+
+        context['stars'] = [stars1, stars2, stars3, stars4, stars5]
 
         return context
 

@@ -10,19 +10,33 @@
     </h1>
 
     <hr/>
-    <dl class="dl-horizontal">
-        <dt>Email</dt><dd>{{ object.email }}</dd>
-        <dt>First Name</dt><dd>{{ object.first_name }}</dd>
-        <dt>Last Name</dt><dd>{{ object.last_name }}</dd>
-        <dt>Date of Birth</dt><dd>{{ object.date_of_birth }}</dd>
-        <dt>Gender</dt><dd>{{ object.gender }}</dd>
-        <dt>Last Login</dt><dd>{{ object.last_login }}</dd>
-        <dt>Average Rating</dt><dd>{{ object.rating }}</dd>
-    </dl>
+    <div class="col-md-5">
+    <h3>Information</h3><hr/>
+        <dl class="dl-horizontal">
+            <dt>Email</dt><dd>{{ object.email }}</dd>
+            <dt>First Name</dt><dd>{{ object.first_name }}</dd>
+            <dt>Last Name</dt><dd>{{ object.last_name }}</dd>
+            <dt>Date of Birth</dt><dd>{{ object.date_of_birth }}</dd>
+            <dt>Gender</dt><dd>{{ object.gender }}</dd>
+            <dt>Last Login</dt><dd>{{ object.last_login }}</dd>
+            <dt>Average Rating</dt><dd>{{ object.rating }}</dd>
+        </dl>
+    </div>
 
+    <div class="col-md-7">
+    <h3>Ratings</h3><hr/>
+    {% for star in stars %}
+        <div class="col-md-2">{{ forloop.counter }} Stars</div>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ star }}" aria-valuemin="0" aria-valuemax="{{ max }}" style="width:0%;">
+          </div>
+        </div>
+    {% endfor %}
+    </div>
 
     <br />
-    <h1>Feedback</h1>
+    <div class="col-md-12">
+    <h1>Feedback Thread</h1>
     <div>
         {% for feedback in thread %}
             <div  class="panel panel-default">
@@ -66,8 +80,7 @@
             </div>
         {% endfor %}
     </div>
-<!--
-    {% if object != currentUser %}
+ <!--   {% if object != currentUser %}
         <h2 class="btn btn-default btn-lg">
             Leave Feedback
             <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
@@ -88,7 +101,8 @@
                 {% buttons submit="Submit Feedback" %}{% endbuttons %}
             {% endblock %}
         </form>
-    {% endif %}
--->
+    {% endif %}-->
     <hr/>
+    </div>
+
 {% endblock %}
