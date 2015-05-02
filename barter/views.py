@@ -157,10 +157,10 @@ def user_edit(request, pk):
 
 @login_required
 def favor_edit(request, pk):
-    if int(request.user.pk) is not int(pk):
+    favor = Favor.objects.get(pk=pk)
+    if int(request.user.pk) is not int(favor.author.pk):
         messages.error(request, 'You are not the author of this favor.')
         return HttpResponseRedirect("/favors/" + pk)
-    favor = Favor.objects.get(pk=pk)
     form = FavorEditForm(request.POST or None, initial={'title': favor.title, 'message': favor.message})
     if form.is_valid():
         favor.title = form.cleaned_data['title']
@@ -173,10 +173,10 @@ def favor_edit(request, pk):
 
 @login_required
 def favor_delete(request, pk):
-    if int(request.user.pk) is not int(pk):
+    favor = Favor.objects.get(pk=pk)
+    if int(request.user.pk) is not int(favor.author.pk):
         messages.error(request, 'You are not the author of this favor.')
         return HttpResponseRedirect("/favors/" + pk)
-    favor = Favor.objects.get(pk=pk)
     favor.delete()
     messages.success(request, 'Favor deleted.')
     return HttpResponseRedirect("/favors/")
