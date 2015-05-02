@@ -182,7 +182,11 @@ def create_feedback(request, pk, pk2=0):
         messages.error(request, 'You cannot give feedback to yourself.')
         return redirect('/users/' + pk + '/')
     if pk2 != 0:
-        feedback = Feedback.objects.get(pk=pk2)
+        try:
+            feedback = Feedback.objects.get(pk=pk2, sender=pk)
+        except Feedback.DoesNotExist:
+            messages.error(request, 'That Feedback does not exist.')
+            return redirect('/users/' + pk + '/')
         form = FeedbackForm(request.POST or None, instance=feedback)
     else:
         if request.session.get('user-feedback') != int(pk):
