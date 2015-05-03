@@ -47,54 +47,75 @@ $(function(){
     });
 
     $('#id_tags_input').on('input',function() {
-        var text = $(this)[0].value;
-        text = text.replace(/ /g, '-')
+        //Characters at the end of the String that triggers tag creation
+        var KEYS = [';', ','];
+        //Everything in the input field, with spaces replaced with dashes
+        var input = $(this)[0].value;
+        input = input.replace(/ /g, '-').toLowerCase();
+        //Element that holds the current tag data
         var current_tags = $('#id_tags')[0];
-        if(text.length != ''){
-            var input = text.substr(0, text.length - 1);
 
-            if($.inArray(text, [';', ',']) >= 0 ){
-                $(this)[0].value = '';
-                return;
-            }
-
-            if($.inArray(text.substr(text.length - 1), [';', ',']) >= 0){
-                if($.inArray(input, current_tags.value.split(',')) > 0){
+        //If the text is not empty(to prevent negative substring index, triggers when deleting)
+            //and the input is not a KEY character
+        //Else clear suggestions and input field
+        if(input.length != 0 && $.inArray(input, KEYS) == -1 ){
+            //separates the KEY character at the end
+            var text = input.substr(0, input.length - 1);
+            var last_char = input.substr(input.length - 1);
+            //If the last character is one of the KEYS
+            //Else search the db for similar tags
+            if($.inArray(last_char, KEYS) >= 0){
+                //If the tag already exists, clear input field and do nothing
+                if($.inArray(text, current_tags.value.split(',')) >= 0){
                     $(this)[0].value = '';
                     return;
                 }
-                create_tag(input);
-                if(text.substr(text.length - 1) == ',')
+                create_tag(text);
+
+                //If there's no existing tag insert without comma
+                if(current_tags.value == '')
                     current_tags.value += text;
                 else
-                    current_tags.value += text + ',';
+                    current_tags.value += ',' + text;
+
+                //Clear input Field
                 $(this)[0].value = '';
             }
-            else
-                ajaxPost('update',{'input': text},
-                function(content){
-                    var ele = $('#suggestions')[0];
-                    var suggestions = content['msg'];
-                    $('#suggestions').empty();
-                    for (var i = 0; i < suggestions.length; ++i) {
-                        if($.inArray(suggestions[i], current_tags.value.split(',')) < 0) {
-                            var link = document.createElement("span");
-                            link.className = "btn btn-link";
-                            link.innerText = suggestions[i];
-                            link.onclick = add_tag;
+            else {
+                ajaxPost('update', {'text': input},
+                    function (content) {
+                        var ele = $('#suggestions')[0];
+                        var suggestions = content['msg'];
+                        $('#suggestions').empty();
+                        for (var i = 0; i < suggestions.length; ++i) {
+                            if ($.inArray(suggestions[i], current_tags.value.split(',')) < 0) {
+                                var link = document.createElement("span");
+                                link.className = "btn btn-link";
+                                link.innerText = suggestions[i];
+                                link.onclick = add_tag;
 
-                            ele.appendChild(link);
+                                ele.appendChild(link);
+                            }
                         }
-                    }
-                }, true);
+                    }, true);
+            }
         }
-         else $('#suggestions').text('');
+         else {
+            $(this)[0].value = '';
+            $('#suggestions').empty();
+        }
     });
 
     function create_tag(label){
         var tag = document.createElement("div");
         tag.className = "btn btn-info";
-        tag.innerText = label;
+        //Capitalize First letters of words (does not effect slug input)
+        var words = label.split('-');
+        var formatted_label = '';
+        for(var i = 0; i < words.length; i++) {
+            formatted_label += words[i].charAt(0).toUpperCase() + words[i].substr(1) + '-';
+        }
+        tag.innerText = formatted_label.substr(0, formatted_label.length-1);
         tag.onclick = remove_tag;
         $('#current_tags')[0].appendChild(tag);
     }
@@ -102,7 +123,7 @@ $(function(){
     function add_tag(){
         $('#id_tags')[0].value += this.innerText + ',';
         create_tag(this.innerText);
-        $('#suggestions').text('');
+        $('#suggestions').empty();
         $('#id_tags_input')[0].value = '';
         this.remove();
     }
