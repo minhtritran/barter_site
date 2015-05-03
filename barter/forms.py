@@ -128,7 +128,7 @@ class FavorForm(forms.ModelForm):
 
     class Meta:
         model = Favor
-        fields = ['title', 'allow_offers', 'message']
+        fields = ['title', 'message']
 
     # def clean(self):
     #     cleaned_data = self.cleaned_data
