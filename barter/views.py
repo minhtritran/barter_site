@@ -230,7 +230,7 @@ def create_feedback(request, pk, pk2=0):
         return redirect('/users/' + pk + '/')
     if pk2 != 0:
         try:
-            feedback = Feedback.objects.get(pk=pk2, sender=request.user.pk)
+            feedback = Feedback.objects.get(pk=int(pk2), sender=request.user.pk)
         except Feedback.DoesNotExist:
             messages.error(request, 'That Feedback does not exist.')
             return redirect('/users/' + pk + '/')
