@@ -19,8 +19,9 @@ class UserAdmin(UserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('date_of_birth',)}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'date_of_birth', 'gender')}),
         ('Permissions', {'fields': ('is_admin',)}),
+        ('Everything Else', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -46,13 +47,13 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 
 class FavorAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'completed_by', 'pub_date', 'status', 'id')
+    list_display = ('title', 'author', 'pub_date', 'status', 'id')
     search_fields = ['author', 'complete_by']
     list_filter = ['pub_date', 'last_edit']
 
 
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('trader', 'favor', 'pub_date', 'last_edit', 'id')
+    list_display = ('trader', 'favor', 'pub_date', 'id')
     search_fields = ['trader', 'favor']
     list_filter = ['pub_date', 'last_edit']
 

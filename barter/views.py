@@ -152,7 +152,7 @@ def user_edit(request, pk):
         messages.success(request, 'User profile successfully updated.')
         return HttpResponseRedirect("/")
 
-    return render(request, 'barter/user_form.html', {"form": form, "form2": form2})
+    return render(request, 'barter/user_edit.html', {"form": form, "form2": form2})
 
 
 @login_required
@@ -161,11 +161,10 @@ def favor_edit(request, pk):
     if int(request.user.pk) is not int(favor.author.pk):
         messages.error(request, 'You are not the author of this favor.')
         return HttpResponseRedirect("/favors/" + pk)
-    form = FavorEditForm(request.POST or None, initial={'title': favor.title, 'message': favor.message})
+    form = FavorEditForm(request.POST or None, instance=favor,
+                         initial={'title': favor.title, 'message': favor.message})
     if form.is_valid():
-        favor.title = form.cleaned_data['title']
-        favor.message = form.cleaned_data['message']
-        favor.save()
+        form.save()
         messages.success(request, 'Favor successfully updated.')
         return HttpResponseRedirect("/favors/" + pk)
     return render(request, 'barter/favor_edit.html', {"form": form, "favor_pk": pk})

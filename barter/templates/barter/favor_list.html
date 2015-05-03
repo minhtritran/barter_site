@@ -8,12 +8,18 @@
     {% for object in object_list %}
         <div class="panel panel-default">
             <div class="panel-body">
-                <h3><a href="{% url "barter:favor_list" %}{{ object.pk }}" style="text-decoration: none">{{ object.title }}</a></h3>
+                <h4><a href="{% url "barter:favor_list" %}{{ object.pk }}" style="text-decoration: none">{{ object.title }}</a></h4>
                 <p>{{ object.message }}</p>
-                <div>
+                <div class="col-md-6">
                     {% for tag in object.tags.all %}
-                        <span><a href="{% url "barter:favor_list_tagged" tag.slug %}">{{ tag }}</a></span>
+                        <span><a class="btn btn-info btn-xs" href="{% url "barter:favor_list_tagged" tag.slug %}">{{ tag }}</a></span>
                     {% endfor %}
+                </div>
+                <div class="col-md-3">
+                        Author: <a href="{{ object.author.pk }}">{{ object.author }}</a>
+                </div>
+                <div class="col-md-3">
+                        Created on: {{ object.pub_date }}
                 </div>
             </div>
         </div>

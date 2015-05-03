@@ -59,9 +59,20 @@
 
     <br />
     <div class="col-md-12">
-    <h1>Feedback Thread</h1>
-    <div>
-        {% for feedback in thread %}
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">Feedback</a></li>
+        <li role="presentation"><a href="#favors" aria-controls="favors" role="tab" data-toggle="tab">Favors</a></li>
+        <li role="presentation"><a href="#offers" aria-controls="offers" role="tab" data-toggle="tab">Offers</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="feedback">
+        <br/>
+            {% if object.feedbacks_received.count > 0 %}
+            {% for feedback in thread %}
             <div  class="panel panel-default">
                 <div class="panel-body">
                     <dl class="dl-horizontal">
@@ -102,29 +113,13 @@
                 {% endif %}
             </div>
         {% endfor %}
+         {% else %}
+                There's no feedback for this user yet.
+        {% endif %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="favors">Hello</div>
+        <div role="tabpanel" class="tab-pane" id="offers">...</div>
     </div>
- <!--   {% if object != currentUser %}
-        <h2 class="btn btn-default btn-lg">
-            Leave Feedback
-            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-        </h2>
-        <form class="hiddenform" method="post" action="feedback/">
-            {% csrf_token %}
-            {% bootstrap_form form %}
-            <label class="control-label" for="id_rating">Rating</label>
-            <div class="stars">
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true" id="1"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true" id="2"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true" id="3"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true" id="4"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true" id="5"></span>
-            </div>
-        <br />
-            {% block button %}
-                {% buttons submit="Submit Feedback" %}{% endbuttons %}
-            {% endblock %}
-        </form>
-    {% endif %}-->
     <hr/>
     </div>
 

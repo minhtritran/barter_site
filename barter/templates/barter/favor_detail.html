@@ -28,7 +28,7 @@
         <div>
             {% for offer in offer_threads %}
                 <div style="margin-bottom: 5px">
-                    <a href={% url "barter:user_detail" offer.trader_id %}><b>{{ offer.email }}</b></a>:
+                    <a href={% url "barter:user_detail" offer.trader_id %}><b>{{ offer.first_name }} {{ offer.last_name }}</b></a>:
                     {% if offer.id == user.pk and not offer.made_by_asker or offer.author_id == user.pk and offer.made_by_asker %}
                         <i>Waiting for a reply</i>
                     {% else %}
