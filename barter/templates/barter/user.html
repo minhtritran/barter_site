@@ -70,9 +70,9 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="feedback">
-        <br/>
+            <br/>
             {% if object.feedbacks_received.count > 0 %}
-            {% for feedback in thread %}
+            {% for feedback in fb_thread %}
             <div  class="panel panel-default">
                 <div class="panel-body">
                     <dl class="dl-horizontal">
@@ -117,7 +117,32 @@
                 There's no feedback for this user yet.
         {% endif %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="favors">Hello</div>
+        <div role="tabpanel" class="tab-pane" id="favors">
+            <br/>
+            {% if object.favors_authored.count > 0 %}
+            {% for favor in favor_thread %}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4><a href="{% url "barter:favor_list" %}{{ favor.pk }}" style="text-decoration: none">{{ favor.title }}</a></h4>
+                    <p>{{ favor.message }}</p>
+                    <div class="col-md-6 tags">
+                        {% for tag in favor.tags.all %}
+                            <span><a class="btn btn-info btn-xs" href="{% url "barter:favor_list_tagged" tag.slug %}">{{ tag }}</a></span>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                            Author: <a href="{{ favor.author.pk }}">{{ favor.author }}</a>
+                    </div>
+                    <div class="col-md-3">
+                            Created on: {{ favor.pub_date }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+         {% else %}
+                This user has not posted any favor yet.
+        {% endif %}
+        </div>
         <div role="tabpanel" class="tab-pane" id="offers">...</div>
     </div>
     <hr/>

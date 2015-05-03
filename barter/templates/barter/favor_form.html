@@ -12,8 +12,8 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             <label class="control-label" for="id_tags">Tags</label>
-            <div class="input-group" id="current_tags" style="min-height: 35px"></div>
-            <div style="min-height: 35px; line-hieght: 35px;">Suggestions: <span id="suggestions"></span></div>
+            <div class="input-group tags" id="current_tags" style="min-height: 35px"></div>
+            <div class="tags">Suggestions: <span id="suggestions"></span></div>
             <input autocomplete="off" class="form-control" id="id_tags_input"
                    placeholder="At least one tag, separated by commas" title="" type="text">
             <br/>

@@ -5,10 +5,10 @@
 {% block content %}
     <h1>Tags</h1>
     <hr/>
-     <ul class="list-unstyled">
+     <ul class="list-unstyled tags">
         {% for object in object_list %}
 
-           <li> <a href={% url "barter:favor_list_tagged" object.slug %}>{{ object.slug }}</a> <span class="badge">{{ object.favor_set.count }}</span></li>
+           <li> <a4 href={% url "barter:favor_list_tagged" object.slug %}>{{ object.slug }}</a> <span class="badge">{{ object.favor_set.count }}</span></li>
 
         {% endfor %}
       </ul>

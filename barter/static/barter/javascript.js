@@ -1,6 +1,7 @@
 $(function(){
     var $rating = 0;
     var $id = 0;
+    var $tag_count = 0;
 
     $('.stars span').hover(
         function () {
@@ -115,7 +116,7 @@ $(function(){
         for(var i = 0; i < words.length; i++) {
             formatted_label += words[i].charAt(0).toUpperCase() + words[i].substr(1) + '-';
         }
-        tag.innerText = formatted_label.substr(0, formatted_label.length-1);
+        tag.innerText = label;
         tag.onclick = remove_tag;
         $('#current_tags')[0].appendChild(tag);
     }
@@ -144,7 +145,7 @@ $(function(){
             cut = cut.substr(0,cut.length - 1);
         current_tags.value = cut;
         this.remove();
-    };
+    }
 
     $('.progress-bar').each(function() {
       var min = $(this).attr('aria-valuemin');

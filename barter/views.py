@@ -82,14 +82,17 @@ class UserDetail(DetailView):
     template_name = "barter/user.html"
 
     def get_context_data(self, **kwargs):
+        current_user = self.kwargs['pk']
         context = super(UserDetail, self).get_context_data(**kwargs)
-        thread = Feedback.objects.filter(receiver=self.kwargs['pk']).order_by('pub_date')
+        fb_thread = Feedback.objects.filter(receiver=current_user).order_by('pub_date')
+        favor_thread = Favor.objects.filter(author=current_user).order_by('pub_date')
 
         stars = []
         for i in range(1, 6):
-            stars.append(len(Feedback.objects.filter(rating=i, receiver=self.kwargs['pk'])))
+            stars.append(len(Feedback.objects.filter(rating=i, receiver=current_user)))
 
-        context['thread'] = thread
+        context['fb_thread'] = fb_thread
+        context['favor_thread'] = favor_thread
         context['currentUser'] = self.request.user
         context['form'] = FeedbackForm(self.request.POST or None)
         context['max'] = max(stars)

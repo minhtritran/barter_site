@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll;
+}
+
 div.stars .glyphicon {
     font-size: 45px;
 }
@@ -13,4 +17,7 @@ div.stars .glyphicon {
 body {
 	background-image: url("cream_dust.png");
     background-repeat: repeat;
+}
+.tags {
+    text-transform: capitalize;
 }
