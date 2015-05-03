@@ -16,7 +16,7 @@
             <dt>Email</dt>
             <dd>
                 {{ object.email }}
-                <small>
+                <span><small>
                     (
                     {% if object.is_confirmed %}
                         <span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span> verified
@@ -29,7 +29,7 @@
                         {% endif %}
                     {% endif %}
                     )
-                </small>
+                </small></span>
             </dd>
             <dt>First Name</dt><dd>{{ object.first_name }}</dd>
             <dt>Last Name</dt><dd>{{ object.last_name }}</dd>
