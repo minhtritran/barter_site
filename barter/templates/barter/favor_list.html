@@ -16,7 +16,7 @@
                     {% endfor %}
                 </div>
                 <div class="col-md-3">
-                        Author: <a href={% url "barter:user_detail" object.author.pk %}>{{ object.author }}</a>
+                        Author: <a href={% url "barter:user_detail" object.author.pk %}>{{ object.author.get_full_name }}</a>
                 </div>
                 <div class="col-md-3">
                         Created on: {{ object.pub_date }}
