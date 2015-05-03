@@ -8,7 +8,7 @@
      <ul class="list-unstyled tags">
         {% for object in object_list %}
 
-           <li> <a4 href={% url "barter:favor_list_tagged" object.slug %}>{{ object.slug }}</a> <span class="badge">{{ object.favor_set.count }}</span></li>
+           <li> <a class="btn btn-info btn-xs" href={% url "barter:favor_list_tagged" object.slug %}>{{ object.slug }}</a> <span class="badge">{{ object.favor_set.count }}</span></li>
 
         {% endfor %}
       </ul>
