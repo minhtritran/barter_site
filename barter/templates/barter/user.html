@@ -131,7 +131,7 @@
                         {% endfor %}
                     </div>
                     <div class="col-md-3">
-                            Author: <a href="{{ favor.author.pk }}">{{ favor.author }}</a>
+                            Author: <a href="{{ favor.author.pk }}">{{ favor.author.get_full_name }}</a>
                     </div>
                     <div class="col-md-3">
                             Created on: {{ favor.pub_date }}
