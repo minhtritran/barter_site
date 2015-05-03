@@ -121,7 +121,11 @@ $(function(){
     }
 
     function add_tag(){
-        $('#id_tags')[0].value += this.innerText + ',';
+        var current_tags = $('#id_tags')[0];
+        if(current_tags.value == '')
+            current_tags.value += this.innerText;
+        else
+            current_tags.value += ',' + this.innerText;
         create_tag(this.innerText);
         $('#suggestions').empty();
         $('#id_tags_input')[0].value = '';
@@ -129,8 +133,16 @@ $(function(){
     }
 
     function remove_tag(){
-        var cut = $('#id_tags')[0].value.split(this.innerText + ',');
-        $('#id_tags')[0].value = cut[0] + cut[1];
+        var current_tags = $('#id_tags')[0];
+        var cut = current_tags.value.split(',');
+        var index = cut.indexOf(this.innerText.toLowerCase());
+        if (index !== -1)
+            cut[index] = '';
+        cut = cut.join();
+        var last_char = cut.substr(cut.length -1);
+        if(last_char == ',')
+            cut = cut.substr(0,cut.length - 1);
+        current_tags.value = cut;
         this.remove();
     };
 
