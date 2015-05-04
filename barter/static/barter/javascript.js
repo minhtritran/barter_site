@@ -1,4 +1,4 @@
-$(function(){
+$(document).ready(function(){
     var $rating = 0;
     var $id = 0;
     var $tag_count = 0;
@@ -47,7 +47,13 @@ $(function(){
         $('.hiddenform').slideToggle(300);
     });
 
-    $('#id_tags_input').on('input',function() {
+    $('select').on('input', function(){
+        var url = $(location).attr('href') + '?sort=' + this.optSelected;
+        alert(this.value);
+        $(location).attr('href',url);
+    });
+
+    $('#id_tags_input').on('input', function() {
         //Characters at the end of the String that triggers tag creation
         var KEYS = [';', ','];
         //Everything in the input field, with spaces replaced with dashes
@@ -92,7 +98,7 @@ $(function(){
                             if ($.inArray(suggestions[i], current_tags.value.split(',')) < 0) {
                                 var link = document.createElement("span");
                                 link.className = "btn btn-link";
-                                link.innerText = suggestions[i];
+                                link.textContent = suggestions[i];
                                 link.onclick = add_tag;
 
                                 ele.appendChild(link);
@@ -116,7 +122,7 @@ $(function(){
         for(var i = 0; i < words.length; i++) {
             formatted_label += words[i].charAt(0).toUpperCase() + words[i].substr(1) + '-';
         }
-        tag.innerText = label;
+        tag.textContent = label;
         tag.onclick = remove_tag;
         $('#current_tags')[0].appendChild(tag);
     }
@@ -124,10 +130,10 @@ $(function(){
     function add_tag(){
         var current_tags = $('#id_tags')[0];
         if(current_tags.value == '')
-            current_tags.value += this.innerText;
+            current_tags.value += this.textContent;
         else
-            current_tags.value += ',' + this.innerText;
-        create_tag(this.innerText);
+            current_tags.value += ',' + this.textContent;
+        create_tag(this.textContent);
         $('#suggestions').empty();
         $('#id_tags_input')[0].value = '';
         this.remove();
@@ -136,7 +142,7 @@ $(function(){
     function remove_tag(){
         var current_tags = $('#id_tags')[0];
         var cut = current_tags.value.split(',');
-        var index = cut.indexOf(this.innerText.toLowerCase());
+        var index = cut.indexOf(this.textContent.toLowerCase());
         if (index !== -1)
             cut[index] = '';
         cut = cut.join();
