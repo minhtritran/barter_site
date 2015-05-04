@@ -13,7 +13,7 @@
             <a class="btn btn-default" href={% url "barter:favor_edit" object.pk %}>Edit</a>
         {% endif %}
     </h1>
-    <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author }}</b></a>: {{ object.message }}</p>
+    <p><a href={% url "barter:user_detail" object.author.pk %}><b>{{ object.author.get_full_name }}</b></a>: {{ object.message }}</p>
     <div>{{ hello }}</div>
     {% if user.is_authenticated and user.is_confirmed and object.author.pk != user.pk and object.status != 'closed' %}
         <a class="btn btn-default" href={% url "barter:create_offer" object.pk user.pk %}>Reply with an offer</a>
