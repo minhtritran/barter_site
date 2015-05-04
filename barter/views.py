@@ -70,17 +70,9 @@ class TagList(ListView):
     template_name = "barter/tag_list.html"
     paginate_by = 25
 
-    def get_context_data(self, **kwargs):
-        context = super(Tag, self).get_context_data(**kwargs)
-        sort = self.kwargs['sort']
-
-        context['sort'] = sort
-
-        return context
-
 
 class UserList(ListView):
-    queryset = User.objects.filter(is_staff=False, is_confirmed=True)
+    queryset = User.objects.filter(is_admin=False)
     template_name = "barter/user_list.html"
     paginate_by = 25
 
