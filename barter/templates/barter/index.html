@@ -7,7 +7,7 @@
     <hr/>
     <p>
 	    {% if user.is_authenticated %}
-	    	Hello {{ user | title }}!
+	    	Hello {{ user.get_full_name | title }}!
 	    {% else %}
 	    	Welcome to Barter!
 	    {% endif %}

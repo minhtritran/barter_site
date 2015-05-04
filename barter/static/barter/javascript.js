@@ -48,8 +48,12 @@ $(document).ready(function(){
     });
 
     $('select').on('input', function(){
-        var url = $(location).attr('href') + '?sort=' + this.optSelected;
-        alert(this.value);
+        var url = $(location).attr('href');
+        var index = url.indexOf("?sort=");
+        if(index == 0)
+            url += '?sort=' + this.value;
+        else url = url.substr(0,index) + '?sort=' + this.value;
+        alert(url);
         $(location).attr('href',url);
     });
 
