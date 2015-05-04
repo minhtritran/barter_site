@@ -47,16 +47,6 @@ $(document).ready(function(){
         $('.hiddenform').slideToggle(300);
     });
 
-    $('select').on('input', function(){
-        var url = $(location).attr('href');
-        var index = url.indexOf("?sort=");
-        if(index == 0)
-            url += '?sort=' + this.value;
-        else url = url.substr(0,index) + '?sort=' + this.value;
-        alert(url);
-        $(location).attr('href',url);
-    });
-
     $('#id_tags_input').on('input', function() {
         //Characters at the end of the String that triggers tag creation
         var KEYS = [';', ','];
