@@ -80,7 +80,7 @@ class TagList(ListView):
 
 
 class UserList(ListView):
-    queryset = User.objects.all()
+    queryset = User.objects.filter(is_staff=False, is_confirmed=True)
     template_name = "barter/user_list.html"
     paginate_by = 25
 
